@@ -2,13 +2,13 @@
 This provides a temperature sensor for the Raspberry Pi processor
 
 # Configuration
-![image](gitResources\Configuration.png)
+![image](gitResources/Configuration.png)
 ## Celcius or Farenheit
 Choose Celcius or Farenheit.
 * **CorF** - Configures Celcius or Fahrenheit.
 
 ## Temperature Ranges
-![image](gitResources\FanRangeExplaination.png)
+![image](gitResources/FanRangeExplaination.png)
 
 Set your fan ranges appropriately. 
 * **LowRange** Minimum Temperature to turn oon 33%. Temperatures less than this value will turn the fan off.
@@ -17,7 +17,7 @@ Set your fan ranges appropriately.
 
 # Info
 You must disable Protection mode.  This add-on works directly with the hardware so it requires Protection Mode to be disabled to access the appropriate hardware devices. <br>
-![image](gitResources\protectionMode.png)
+![image](gitResources/protectionMode.png)
 
 # Enable I2C
 In order to enable i2C, you must follow the directions in this link. 
