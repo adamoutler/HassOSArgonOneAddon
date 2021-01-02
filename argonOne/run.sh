@@ -1,9 +1,9 @@
 #!/usr/bin/with-contenv bashio
 CorF=$(cat options.json |jq -r '.CorF')
 
-x1=$(cat options.json |jq -r '.LowRange')
-x2=$(cat options.json |jq -r '.MediumRange')
-x3=$(cat options.json |jq -r '.HighRange')
+t1=$(cat options.json |jq -r '.LowRange')
+t2=$(cat options.json |jq -r '.MediumRange')
+t3=$(cat options.json |jq -r '.HighRange')
 lastPosition=0
 curPosition=-1
 
@@ -33,11 +33,11 @@ until false; do
   fi
   value=$cpuTemp
   echo "Current Temperature $cpuTemp °$unit"
-  if ( fcomp $value '<=' $x1 ); then
+  if ( fcomp $value '<=' $t1 ); then
     curPosition=1; #less than lowest
-  elif ( fcomp $x1 '<=' $value && fcomp $value '<=' $x2 ); then
+  elif ( fcomp $t1 '<=' $value && fcomp $value '<=' $t2 ); then
     curPosition=2; #between 1 and 2
-  elif ( fcomp $x2 '<=' $value && fcomp $value '<=' $x3 ); then
+  elif ( fcomp $t2 '<=' $value && fcomp $value '<=' $t3 ); then
     curPosition=3; #between 2 and 3
   else
     curPosition=4;
