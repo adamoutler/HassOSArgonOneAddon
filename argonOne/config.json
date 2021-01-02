@@ -12,9 +12,9 @@
   "privileged": ["SYS_ADMIN"],
   "options": {
      "CorF": "F",
-     "LowRange": 70,
-     "MediumRange": 80,
-     "HighRange": 90,
+     "LowRange": 90,
+     "MediumRange": 115,
+     "HighRange": 122,
      "QuietProfile": true
   },
   "schema": {
