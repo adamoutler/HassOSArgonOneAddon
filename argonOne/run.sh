@@ -1,13 +1,14 @@
 #!/usr/bin/with-contenv bashio
-CorF=$(cat options.json |jq -r '.CorF')
 
-t1=$(cat options.json |jq -r '.LowRange')
-t2=$(cat options.json |jq -r '.MediumRange')
-t3=$(cat options.json |jq -r '.HighRange')
-lastPosition=0
-curPosition=-1
 
-trap 'i2cset -y 1 0x01a 0x00' EXIT INT TERM
+# #make everything into a float
+mkfloat(){
+  str=$1
+  if [[ $str != *"."* ]]; then
+     str=$str".0"
+  fi
+  echo $str;
+}
 
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
@@ -23,6 +24,15 @@ fcomp() {
     (( ${x:-0} $op ${y:-0} ))
 } 
 
+CorF=$(cat options.json |jq -r '.CorF')
+t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
+t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
+t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
+lastPosition=0
+curPosition=-1
+
+trap 'i2cset -y 1 0x01a 0x00' EXIT INT TERM
+
 until false; do
   read cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
   cpuTemp=$(( $cpuRawTemp/1000 )) #built-in bash math
@@ -31,7 +41,7 @@ until false; do
     cpuTemp=$(( ( $cpuTemp *  9/5 ) + 32 ));
     unit="F"
   fi
-  value=$cpuTemp
+  value=$(mkfloat $cpuTemp)
   echo "Current Temperature $cpuTemp °$unit"
   if ( fcomp $value '<=' $t1 ); then
     curPosition=1; #less than lowest
