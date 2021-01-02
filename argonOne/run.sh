@@ -62,7 +62,7 @@ until false; do
        i2cset -y 1 0x01a 0x00
      ;;
     2)
-     if [ $quiet == true ]; then
+     if [ $quiet != true ]; then
        echo "Level 2 - Fan 33% (Low)";
        i2cset -y 1 0x01a 0x21
      else 
@@ -71,7 +71,7 @@ until false; do
      fi
      ;;
     3)
-     if [ $quiet == true ]; then
+     if [ $quiet != true ]; then
        echo "Level 3 - Fan 66% (Medium)";
        i2cset -y 1 0x01a 0x42
      else
