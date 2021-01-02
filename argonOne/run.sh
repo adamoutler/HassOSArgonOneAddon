@@ -28,6 +28,8 @@ CorF=$(cat options.json |jq -r '.CorF')
 t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
 t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
 t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
+quiet=$(cat options.json |jq -r '.QuietProfile')
+
 lastPosition=0
 curPosition=-1
 
@@ -56,20 +58,30 @@ until false; do
    echo last level: $lastPosition current level: $curPosition;
    case $curPosition in
     1)
-     echo "Level 1 - Fan 0% (OFF)";
-     i2cset -y 1 0x01a 0x00
+       echo "Level 1 - Fan 0% (OFF)";
+       i2cset -y 1 0x01a 0x00
      ;;
     2)
-     echo "Level 2 - Fan 33% (Low)";
-     i2cset -y 1 0x01a 0x21
+     if [ $quiet == true ]; then
+       echo "Level 2 - Fan 33% (Low)";
+       i2cset -y 1 0x01a 0x21
+     else 
+       echo "Quiet Level 2 - Fan 1% (Low)";
+       i2cset -y 1 0x01a 0x1
+     fi
      ;;
     3)
-     echo "Level 3 - Fan 66% (Medium)";
-     i2cset -y 1 0x01a 0x42
+     if [ $quiet == true ]; then
+       echo "Level 3 - Fan 66% (Medium)";
+       i2cset -y 1 0x01a 0x42
+     else
+       echo "Quiet Level 3 - Fan 3% (Medium)";
+       i2cset -y 1 0x01a 0x3 
+     fi
      ;;
     *)
-     echo "Level4 - Fan 100% (High)";
-     i2cset -y 1 0x01a 0x64
+       echo "Level4 - Fan 100% (High)";
+       i2cset -y 1 0x01a 0x64
      ;;
    esac
    lastPosition=$curPosition;

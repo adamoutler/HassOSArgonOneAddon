@@ -14,12 +14,14 @@
      "CorF": "F",
      "LowRange": 70,
      "MediumRange": 80,
-     "HighRange": 90
+     "HighRange": 90,
+     "QuietProfile": true
   },
   "schema": {
     "CorF": "str",
     "LowRange": "int(0,255)",
     "MediumRange": "int(0,255)",
-    "HighRange": "int(0,255)"
+    "HighRange": "int(0,255)",
+    "QuietProfile":"bool"
    }
 }
