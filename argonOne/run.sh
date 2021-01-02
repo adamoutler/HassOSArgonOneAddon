@@ -55,7 +55,6 @@ until false; do
     curPosition=4;
   fi
   if [ $lastPosition != $curPosition ]; then
-   echo last level: $lastPosition current level: $curPosition;
    case $curPosition in
     1)
        echo "Level 1 - Fan 0% (OFF)";
