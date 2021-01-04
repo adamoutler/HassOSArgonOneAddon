@@ -1,4 +1,4 @@
-![image](gitResources/activecooling.jpg)
+![image](../gitResources/activecooling.jpg)
 
 This is an addon for Argon One in Home Assistantan.  It's essentially a script that runs in a docker container.  It enables and automates the Argon One Active Cooling System with your specifications.<br>
 
@@ -6,16 +6,16 @@ This is an addon for Argon One in Home Assistantan.  It's essentially a script t
 Within Home Assistant, click Supervisor-> Add-on Store -> … button (in top left)-> Repositories. Add this repository. 
 
 Click ArgonOne Temp Control and install.<br>
-![image](gitResources/addonSelect.png)
+![image](../gitResources/addonSelect.png)
 
 # Configuration
-![image](gitResources/Configuration.png)
+![image](../gitResources/Configuration.png)
 ## Celcius or Farenheit
 Choose Celcius or Farenheit.
 * **CorF** - Configures Celcius or Fahrenheit.
 
 ## Temperature Ranges
-![image](gitResources/FanRangeExplaination.png)
+![image](../gitResources/FanRangeExplaination.png)
 
 Set your fan ranges appropriately. 
 * **LowRange** Minimum Temperature to turn oon 33%. Temperatures less than this value will turn the fan off.
