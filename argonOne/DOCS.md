@@ -12,7 +12,11 @@ Set your fan ranges appropriately.
 * **MediumRange** to be the temperature divider between 33 and 66%.
 * **HighRange** to be the maximum temperature before 100% fan.
 
-
 # Enable I2C
-In order to enable i2C, you must follow the directions in this link. 
+In order to enable i2C, you must follow one of the methods below. 
+
+## The easy way
+https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167
+
+## The official way
 https://www.home-assistant.io/hassio/enable_i2c/

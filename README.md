@@ -24,5 +24,10 @@ Set your fan ranges appropriately.
 
 
 # Enable I2C
-In order to enable i2C, you must follow the directions in this link. 
+In order to enable i2C, you must follow one of the methods below. 
+
+## The easy way
+https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167
+
+## The official way
 https://www.home-assistant.io/hassio/enable_i2c/
