@@ -9,7 +9,6 @@
   "boot": "auto",
   "gpio": true,
   "devices": ["/dev/i2c-1:/dev/i2c-1:rwm"],
-  "privileged": ["SYS_ADMIN"],
   "options": {
      "CorF": "F",
      "LowRange": 90,
