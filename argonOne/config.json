@@ -7,7 +7,6 @@
   "startup": "application",
   "full_access": "no",
   "boot": "auto",
-  "gpio": true,
   "devices": ["/dev/i2c-1:/dev/i2c-1:rwm"],
   "options": {
      "CorF": "F",
