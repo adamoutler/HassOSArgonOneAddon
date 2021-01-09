@@ -35,10 +35,10 @@ curPosition=-1
 
 trap 'i2cset -y 1 0x01a 0x00' EXIT INT TERM
 
-if [ ! -e /dev/i2c-1 ]; then 
+if [ ! -e /dev/i2c-1 ]; then
   echo "Cannot find I2C port.  You must enable I2C for this to operate properly";
   exit 1;
-done;
+fi
 
 
 until false; do
