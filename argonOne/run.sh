@@ -55,6 +55,7 @@ until false; do
     curPosition=4;
   fi
   if [ $lastPosition != $curPosition ]; then
+   set +e
    case $curPosition in
     1)
        echo "Level 1 - Fan 0% (OFF)";
@@ -83,6 +84,7 @@ until false; do
        i2cset -y 1 0x01a 0x64
      ;;
    esac
+   set -e
    lastPosition=$curPosition;
   fi
   sleep 30;
