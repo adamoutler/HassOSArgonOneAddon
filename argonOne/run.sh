@@ -35,6 +35,12 @@ curPosition=-1
 
 trap 'i2cset -y 1 0x01a 0x00' EXIT INT TERM
 
+if [ ! -e /dev/i2c-1 ]; then 
+  echo "Cannot find I2C port.  You must enable I2C for this to operate properly";
+  exit 1;
+done;
+
+
 until false; do
   read cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
   cpuTemp=$(( $cpuRawTemp/1000 )) #built-in bash math
@@ -65,23 +71,28 @@ until false; do
      if [ $quiet != true ]; then
        echo "Level 2 - Fan 33% (Low)";
        i2cset -y 1 0x01a 0x21
-     else 
+       test $? -ne 0 && curPosition=lastPosition;
+     else
        echo "Quiet Level 2 - Fan 1% (Low)";
        i2cset -y 1 0x01a 0x1
+       test $? -ne 0 && curPosition=lastPosition;
      fi
      ;;
     3)
      if [ $quiet != true ]; then
        echo "Level 3 - Fan 66% (Medium)";
        i2cset -y 1 0x01a 0x42
+       test $? -ne 0 && curPosition=lastPosition;
      else
        echo "Quiet Level 3 - Fan 3% (Medium)";
        i2cset -y 1 0x01a 0x3 
+       test $? -ne 0 && curPosition=lastPosition;
      fi
      ;;
     *)
        echo "Level4 - Fan 100% (High)";
        i2cset -y 1 0x01a 0x64
+       test $? -ne 0 && curPosition=lastPosition;
      ;;
    esac
    set -e
