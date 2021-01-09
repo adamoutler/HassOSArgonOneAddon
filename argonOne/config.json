@@ -8,6 +8,8 @@
   "full_access": "no",
   "boot": "auto",
   "devices": ["/dev/i2c-1:/dev/i2c-1:rwm"],
+  "host_network": false,
+  "map": ["config","ssl","addons","backup","share","media"],
   "options": {
      "CorF": "F",
      "LowRange": 90,
