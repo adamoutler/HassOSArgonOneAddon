@@ -5,7 +5,7 @@
 mkfloat(){
   str=$1
   if [[ $str != *"."* ]]; then
-     str=$str".0"
+    str=$str".0"
   fi
   echo $str;
 }
@@ -61,42 +61,42 @@ until false; do
     curPosition=4;
   fi
   if [ $lastPosition != $curPosition ]; then
-   set +e
-   case $curPosition in
-    1)
-       echo "Level 1 - Fan 0% (OFF)";
-       i2cset -y 1 0x01a 0x00
-     ;;
-    2)
-     if [ $quiet != true ]; then
-       echo "Level 2 - Fan 33% (Low)";
-       i2cset -y 1 0x01a 0x21
-       test $? -ne 0 && curPosition=lastPosition;
-     else
-       echo "Quiet Level 2 - Fan 1% (Low)";
-       i2cset -y 1 0x01a 0x1
-       test $? -ne 0 && curPosition=lastPosition;
-     fi
-     ;;
-    3)
-     if [ $quiet != true ]; then
-       echo "Level 3 - Fan 66% (Medium)";
-       i2cset -y 1 0x01a 0x42
-       test $? -ne 0 && curPosition=lastPosition;
-     else
-       echo "Quiet Level 3 - Fan 3% (Medium)";
-       i2cset -y 1 0x01a 0x3 
-       test $? -ne 0 && curPosition=lastPosition;
-     fi
-     ;;
-    *)
-       echo "Level4 - Fan 100% (High)";
-       i2cset -y 1 0x01a 0x64
-       test $? -ne 0 && curPosition=lastPosition;
-     ;;
-   esac
-   set -e
-   lastPosition=$curPosition;
+    set +e
+    case $curPosition in
+      1)
+          echo "Level 1 - Fan 0% (OFF)";
+          i2cset -y 1 0x01a 0x00
+      ;;
+      2)
+        if [ $quiet != true ]; then
+          echo "Level 2 - Fan 33% (Low)";
+          i2cset -y 1 0x01a 0x21
+          test $? -ne 0 && curPosition=lastPosition;
+        else
+          echo "Quiet Level 2 - Fan 1% (Low)";
+          i2cset -y 1 0x01a 0x1
+          test $? -ne 0 && curPosition=lastPosition;
+        fi
+        ;;
+      3)
+        if [ $quiet != true ]; then
+          echo "Level 3 - Fan 66% (Medium)";
+          i2cset -y 1 0x01a 0x42
+          test $? -ne 0 && curPosition=lastPosition;
+        else
+          echo "Quiet Level 3 - Fan 3% (Medium)";
+          i2cset -y 1 0x01a 0x3 
+          test $? -ne 0 && curPosition=lastPosition;
+        fi
+        ;;
+      *)
+        echo "Level4 - Fan 100% (High)";
+        i2cset -y 1 0x01a 0x64
+        test $? -ne 0 && curPosition=lastPosition;
+        ;;
+    esac
+    set -e
+    lastPosition=$curPosition;
   fi
   sleep 30;
 done
