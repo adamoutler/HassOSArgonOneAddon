@@ -10,6 +10,7 @@
    "auth_api": true,
    "devices": ["/dev/i2c-1:/dev/i2c-1:rwm"],
    "host_network": false,
+   "url":"https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/",
    "map": ["config", "ssl", "addons", "backup", "share", "media"],
    "options": {
       "CorF": "F",
