@@ -3,8 +3,7 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 WORKDIR /data
 
-RUN apk update
-RUN apk add i2c-tools
+RUN apk add i2c-tools --no-cache
 COPY run.sh /
 RUN chmod a+x /run.sh
 
