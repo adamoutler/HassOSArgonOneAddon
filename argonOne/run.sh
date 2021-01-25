@@ -1,19 +1,10 @@
 #!/usr/bin/with-contenv bashio
 
 ###
-#Inputs - inputs from Home Assistant Config
-###
-CorF=$(cat options.json |jq -r '.CorF')
-t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
-t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
-t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
-quiet=$(cat options.json |jq -r '.QuietProfile')
-
-###
 #Methods - methods called by script
 ###
 
-# #make everything into a float
+##make everything into a float
 mkfloat() {
   str=$1
   if [[ $str != *"."* ]]; then
@@ -21,6 +12,15 @@ mkfloat() {
   fi
   echo $str;
 }
+
+###
+#Inputs - inputs from Home Assistant Config
+###
+CorF=$(cat options.json |jq -r '.CorF')
+t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
+t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
+t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
+quiet=$(cat options.json |jq -r '.QuietProfile')
 
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
