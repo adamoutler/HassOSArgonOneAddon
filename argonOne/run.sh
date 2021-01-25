@@ -13,15 +13,6 @@ mkfloat() {
   echo $str;
 }
 
-###
-#Inputs - inputs from Home Assistant Config
-###
-CorF=$(cat options.json |jq -r '.CorF')
-t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
-t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
-t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
-quiet=$(cat options.json |jq -r '.QuietProfile')
-
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
     local oldIFS="$IFS" op=$2 x y digitx digity
@@ -35,6 +26,15 @@ fcomp() {
     [[ ${3:0:1} == '-' ]] && (( y[0] *= -1 ))
     (( ${x:-0} $op ${y:-0} ))
 } 
+
+###
+#Inputs - inputs from Home Assistant Config
+###
+CorF=$(cat options.json |jq -r '.CorF')
+t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
+t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
+t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
+quiet=$(cat options.json |jq -r '.QuietProfile')
 
 ###
 #initial setup - prepare things for operation
@@ -76,7 +76,7 @@ until false; do
   if [ $lastPosition != $curPosition ]; then
     set +e
 
-    #convert fan position to a level and activate
+    #convert fan position to a level and activate fan
     case $curPosition in
       1)
           echo "Level 1 - Fan 0% (OFF)";
