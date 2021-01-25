@@ -1,5 +1,17 @@
 #!/usr/bin/with-contenv bashio
 
+###
+#Inputs - inputs from Home Assistant Config
+###
+CorF=$(cat options.json |jq -r '.CorF')
+t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
+t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
+t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
+quiet=$(cat options.json |jq -r '.QuietProfile')
+
+###
+#Methods - methods called by script
+###
 
 # #make everything into a float
 mkfloat(){
@@ -24,15 +36,12 @@ fcomp() {
     (( ${x:-0} $op ${y:-0} ))
 } 
 
-CorF=$(cat options.json |jq -r '.CorF')
-t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
-t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
-t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
-quiet=$(cat options.json |jq -r '.QuietProfile')
+###
+#initial setup - prepare things for operation
+###
 
 lastPosition=0
 curPosition=-1
-
 trap 'i2cset -y 1 0x01a 0x00' EXIT INT TERM
 
 if [ ! -e /dev/i2c-1 ]; then
@@ -40,7 +49,9 @@ if [ ! -e /dev/i2c-1 ]; then
   exit 1;
 fi
 
-
+###
+#Main Loop - read and react to changes in read temperature
+###
 until false; do
   read cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
   cpuTemp=$(( $cpuRawTemp/1000 )) #built-in bash math
@@ -51,6 +62,8 @@ until false; do
   fi
   value=$(mkfloat $cpuTemp)
   echo "Current Temperature $cpuTemp °$unit"
+  
+  #Choose a fan setting position by temperature comparison
   if ( fcomp $value '<=' $t1 ); then
     curPosition=1; #less than lowest
   elif ( fcomp $t1 '<=' $value && fcomp $value '<=' $t2 ); then
@@ -62,6 +75,8 @@ until false; do
   fi
   if [ $lastPosition != $curPosition ]; then
     set +e
+
+    #convert fan position to a level and activate
     case $curPosition in
       1)
           echo "Level 1 - Fan 0% (OFF)";
