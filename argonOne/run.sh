@@ -14,7 +14,7 @@ quiet=$(cat options.json |jq -r '.QuietProfile')
 ###
 
 # #make everything into a float
-mkfloat(){
+mkfloat() {
   str=$1
   if [[ $str != *"."* ]]; then
     str=$str".0"
