@@ -1,6 +1,6 @@
 {
    "name": "ArgonOne Active Cooling",
-   "version": "0.10",
+   "version": "0.11",
    "slug": "argon_one_temp",
    "description": "This adjusts the temp of ArgonOne by fan control",
    "arch": ["armhf", "armv7", "aarch64"],
