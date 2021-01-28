@@ -14,9 +14,9 @@
    "map": ["config", "ssl", "addons", "backup", "share", "media"],
    "options": {
       "CorF": "F",
-      "LowRange": 90,
-      "MediumRange": 115,
-      "HighRange": 122,
+      "LowRange": 130,
+      "MediumRange": 140,
+      "HighRange": 150,
       "QuietProfile": true
    },
    "schema": {

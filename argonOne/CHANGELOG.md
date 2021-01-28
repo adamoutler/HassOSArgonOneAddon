@@ -1,7 +1,8 @@
 ___
 | Version | Change|
 | --- | --- |
-| **0.11** | refactoring for cleaner sections in code
+| **0.12** | Stock values for fan speed|
+| **0.11** | refactoring for cleaner sections in code|
 | **0.10** | Increasing security rating to solid 6. Adding Changelog. Fixing URL|
 | **0.9** | Troubleshooting issues with install for user|
 | **0.7** | Added apparmor profile and reworked security for level 6 but only after installation|

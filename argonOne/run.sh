@@ -85,7 +85,7 @@ until false; do
       2)
         if [ $quiet != true ]; then
           echo "Level 2 - Fan 33% (Low)";
-          i2cset -y 1 0x01a 0x21
+          i2cset -y 1 0x01a 0x0a
           test $? -ne 0 && curPosition=lastPosition;
         else
           echo "Quiet Level 2 - Fan 1% (Low)";
@@ -96,7 +96,7 @@ until false; do
       3)
         if [ $quiet != true ]; then
           echo "Level 3 - Fan 66% (Medium)";
-          i2cset -y 1 0x01a 0x42
+          i2cset -y 1 0x01a 0x37
           test $? -ne 0 && curPosition=lastPosition;
         else
           echo "Quiet Level 3 - Fan 3% (Medium)";
