@@ -3,7 +3,8 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 WORKDIR /data
 
-RUN apk add i2c-tools --no-cache
+RUN  apk add i2c-tools --no-cache; apt update; apt install i2c-tools; exit 0
+
 COPY run.sh /
 RUN chmod a+x /run.sh
 
