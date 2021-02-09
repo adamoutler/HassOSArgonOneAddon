@@ -1,6 +1,7 @@
 ___
 | Version | Change|
 | --- | --- |
+| **0.13** | Support new Addon API | 
 | **0.12** | Stock values for fan speed|
 | **0.11** | refactoring for cleaner sections in code|
 | **0.10** | Increasing security rating to solid 6. Adding Changelog. Fixing URL|
