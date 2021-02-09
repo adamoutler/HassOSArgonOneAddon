@@ -49,6 +49,18 @@ if [ ! -e /dev/i2c-1 ]; then
   exit 1;
 fi
 
+echo "Detecting Layout of i2c, we expect to see \"1a\" here."
+i2cDetect=$(i2cdetect -y -a 1);
+echo -e "${i2cDetect}"
+
+if [[ "$i2cDetect" != *"1a"* ]]; then 
+    echo "i2c not detected.  This addon will not control temperature.";
+fi;
+
+
+
+
+
 ###
 #Main Loop - read and react to changes in read temperature
 ###
