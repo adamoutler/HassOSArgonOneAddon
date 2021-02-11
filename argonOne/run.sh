@@ -27,6 +27,51 @@ fcomp() {
     (( ${x:-0} $op ${y:-0} ))
 } 
 
+
+fanSpeedReport(){
+   percent=$1;
+   level=$2;
+   mode=$3;
+    case $level in
+      1)
+        icon=mdi:fan-speed-1;
+        ;;
+      2)
+        icon=mdi:fan-speed-2;
+        ;;
+      3)
+        icon=mdi:fan-speed-3;
+        ;;
+      *)
+        icon=mdi:fan-off;
+    esac
+    reqBody='{"state": "'${percent}'", "attributes": { "unit_of_measurement": "%", "icon": "'${icon}'", "mode": "'${mode}'", "fan level": "'${level}'", "friendly_name": "Argon Fan Speed"}}'
+    nc -i 1 hassio 80 <<<unix2dos<<EOF
+POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
+Authorization: Bearer ${SUPERVISOR_TOKEN}
+Content-Length: $( busybox echo -n ${reqBody} | wc -c )
+
+${reqBody}
+EOF
+
+
+};
+
+
+
+action() {
+  level=$1
+  percent=$2
+  name=$3
+  percentHex=$4
+  echo "Level $level - Fan $percent% ($name)";
+  i2cset -y 1 0x01a $percentHex
+  test ${createEntity} == "true" && fanSpeedReport $percent $level $name
+}
+
+
+
+
 ###
 #Inputs - inputs from Home Assistant Config
 ###
@@ -35,17 +80,17 @@ t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
 t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
 t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
 quiet=$(cat options.json |jq -r '.QuietProfile')
+createEntity=$(cat options.json |jq -r '."Create a Fan Speed entity in Home Assistant"')
+
 
 ###
 #initial setup - prepare things for operation
 ###
-
-lastPosition=0
 curPosition=-1
 trap 'i2cset -y 1 0x01a 0x00' EXIT INT TERM
 
 if [ ! -e /dev/i2c-1 ]; then
-  echo "Cannot find I2C port.  You must enable I2C for this to operate properly";
+  echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
   exit 1;
 fi
 
@@ -54,7 +99,9 @@ i2cDetect=$(i2cdetect -y -a 1);
 echo -e "${i2cDetect}"
 
 if [[ "$i2cDetect" != *"1a"* ]]; then 
-    echo "i2c not detected.  This addon will not control temperature.";
+    echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
+else 
+  echo "Settings initialized. Argon One Detected. Beginning monitor.."
 fi;
 
 
@@ -91,35 +138,30 @@ until false; do
     #convert fan position to a level and activate fan
     case $curPosition in
       1)
-          echo "Level 1 - Fan 0% (OFF)";
-          i2cset -y 1 0x01a 0x00
+         action 1 0 "OFF" 0x00
+         test $? -eq 0 && curPosition=lastPosition;
       ;;
       2)
         if [ $quiet != true ]; then
-          echo "Level 2 - Fan 33% (Low)";
-          i2cset -y 1 0x01a 0x0a
-          test $? -ne 0 && curPosition=lastPosition;
+          action 2 33 "Low" 0x0a
+          test $? -eq 0 && curPosition=lastPosition;
         else
-          echo "Quiet Level 2 - Fan 1% (Low)";
-          i2cset -y 1 0x01a 0x1
-          test $? -ne 0 && curPosition=lastPosition;
+          action 2 1 "Quiet Low" 0x01
+          test $? -eq 0 && curPosition=lastPosition;
         fi
         ;;
       3)
         if [ $quiet != true ]; then
-          echo "Level 3 - Fan 66% (Medium)";
-          i2cset -y 1 0x01a 0x37
-          test $? -ne 0 && curPosition=lastPosition;
+          action 3 66 "Medium" 0x042
+          test $? -eq 0 && curPosition=lastPosition;
         else
-          echo "Quiet Level 3 - Fan 3% (Medium)";
-          i2cset -y 1 0x01a 0x3 
-          test $? -ne 0 && curPosition=lastPosition;
+          action 3 3 "Quiet Medium" 0x03
+          test $? -eq 0 && curPosition=lastPosition;
         fi
         ;;
       *)
-        echo "Level4 - Fan 100% (High)";
-        i2cset -y 1 0x01a 0x64
-        test $? -ne 0 && curPosition=lastPosition;
+        action 4 100 "High" 0x64
+        test $? -eq 0 && curPosition=lastPosition;
         ;;
     esac
     set -e
