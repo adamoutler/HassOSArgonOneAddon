@@ -49,12 +49,10 @@ fanSpeedReport(){
     nc -i 1 hassio 80 <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
-Content-Length: $( busybox echo -n ${reqBody} | wc -c )
+Content-Length: $( echo -n ${reqBody} | wc -c )
 
 ${reqBody}
 EOF
-
-
 };
 
 
