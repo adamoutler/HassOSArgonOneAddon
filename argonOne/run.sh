@@ -32,14 +32,17 @@ fanSpeedReport(){
    percent=$1;
    level=$2;
    mode=$3;
-    case $level in
+   case $level in
       1)
-        icon=mdi:fan-speed-1;
+        icon=mdi:fan-off;
         ;;
       2)
-        icon=mdi:fan-speed-2;
+        icon=mdi:fan-speed-1;
         ;;
       3)
+        icon=mdi:fan-speed-2;
+        ;;
+      4)
         icon=mdi:fan-speed-3;
         ;;
       *)
