@@ -1,6 +1,7 @@
 ___
 | Version | Change|
 | --- | --- |
+| **0.18** | Report fan speed at startup | 
 | **0.17** | fix entity icon |
 | **0.16** | Support for fan speed entity |
 | **0.13** | Support new Addon API | 
