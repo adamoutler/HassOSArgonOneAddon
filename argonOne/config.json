@@ -1,6 +1,6 @@
 {
    "name": "ArgonOne Active Cooling",
-   "version": "0.18",
+   "version": "0.19",
    "slug": "argon_one_temp",
    "description": "Actively keeping your Argon One cool.",
    "arch": ["armhf", "armv7", "aarch64"],
