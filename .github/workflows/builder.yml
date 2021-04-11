@@ -23,6 +23,6 @@ jobs:
           --armhf --armv7 --aarch64 \
           --target argonOne \
           -b main \
-          -r https://github.com/adamoutler/HassOSArgonOneAddon \ 
+          -r https://github.com/adamoutler/HassOSArgonOneAddon \
           --docker-hub adamoutler/argononeactivecooling
 
