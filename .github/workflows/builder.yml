@@ -22,5 +22,5 @@ jobs:
         args: |
           --armhf --armv7 --aarch64 \
           --target argonOne \
-          --docker-hub argononeactivecooling
+          --docker-hub adamoutler/argononeactivecooling
 
