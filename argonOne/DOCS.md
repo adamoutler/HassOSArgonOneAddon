@@ -24,11 +24,11 @@ In order to enable i2C, you must follow one of the methods below.
 
 ### The easy way
 
-https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167
+[Addon](https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167)
 
 ### The official way
 
-https://www.home-assistant.io/hassio/enable_i2c/
+[Official Guide](https://www.home-assistant.io/hassio/enable_i2c/)
 
 ## Support
 
