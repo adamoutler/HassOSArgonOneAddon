@@ -10,7 +10,7 @@ mkfloat() {
   if [[ $str != *"."* ]]; then
     str=$str".0"
   fi
-  echo $str;
+  echo "$str";
 }
 
 ## Float comparison so that we don't need to call non-bash processes
@@ -56,7 +56,7 @@ fanSpeedReport(){
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
-Content-Length: $( echo -ne ${reqBody} | wc -c ) 
+Content-Length: $( echo -ne "${reqBody}" | wc -c ) 
 
 ${reqBody}
 EOF
@@ -70,8 +70,8 @@ action() {
   name=${3}
   percentHex=${4}
   echo "Level $level - Fan $percent% ($name)";
-  test ${createEntity} == "true" && fanSpeedReport $percent $level $name  
-  i2cset -y 1 0x01a ${percentHex}
+  test "${createEntity}" == "true" && fanSpeedReport "$percent" "$level" "$name"  
+  i2cset -y 1 0x01a '${percentHex}'
   return ${?}
 }
 
@@ -123,7 +123,7 @@ until false; do
   cpuTemp=$(( cpuRawTemp/1000 )) #built-in bash math
     unit="C"
   if [ "$CorF" == "F" ]; then #convert to F
-    cpuTemp=$(( ( $cpuTemp *  9/5 ) + 32 ));
+    cpuTemp=$(( ( cpuTemp *  9/5 ) + 32 ));
     unit="F"
   fi
   value=$(mkfloat $cpuTemp)
