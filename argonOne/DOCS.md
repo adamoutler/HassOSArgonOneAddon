@@ -32,6 +32,6 @@ In order to enable i2C, you must follow one of the methods below.
 
 ## Support
 
-Need support? Click [here](https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/8). 
-Try to be detailed about your feedback. 
+Need support? Click [here](https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/8).
+Try to be detailed about your feedback.
 If you can't be detailed, then please be as obnoxious as you can be.
