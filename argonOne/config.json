@@ -1,34 +1,34 @@
 {
-   "name": "ArgonOne Active Cooling",
-   "version": "19",
-   "slug": "argon_one_temp",
-   "description": "Actively keeping your Argon One cool.",
-   "arch": ["armhf", "armv7", "aarch64"],
-   "startup": "application",
-   "full_access": "no",
-   "boot": "auto",
-   "auth_api": true,
-   "homeassistant_api": true,
-   "hassio_role": "homeassistant",
-   "hassio_api": true,
-   "devices": ["/dev/i2c-1"],
-   "host_network": false,
-   "url":"https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/",
-   "map": ["config", "ssl", "addons", "backup", "share", "media"],
-   "options": {
-      "CorF": "F",
-      "LowRange": 130,
-      "MediumRange": 140,
-      "HighRange": 150,
-      "QuietProfile": true,
-      "Create a Fan Speed entity in Home Assistant": false
-   },
-   "schema": {
-      "CorF": "str",
-      "LowRange": "int(0,255)",
-      "MediumRange": "int(0,255)",
-      "HighRange": "int(0,255)",
-      "QuietProfile": "bool",
-      "Create a Fan Speed entity in Home Assistant": "bool"
-   }
+  "name": "ArgonOne Active Cooling",
+  "version": "19",
+  "slug": "argon_one_temp",
+  "description": "Actively keeping your Argon One cool.",
+  "arch": ["armhf", "armv7", "aarch64"],
+  "startup": "application",
+  "full_access": "no",
+  "boot": "auto",
+  "auth_api": true,
+  "homeassistant_api": true,
+  "hassio_role": "homeassistant",
+  "hassio_api": true,
+  "devices": ["/dev/i2c-1"],
+  "host_network": false,
+  "url": "https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/",
+  "map": ["config", "ssl", "addons", "backup", "share", "media"],
+  "options": {
+    "CorF": "F",
+    "LowRange": 130,
+    "MediumRange": 140,
+    "HighRange": 150,
+    "QuietProfile": true,
+    "Create a Fan Speed entity in Home Assistant": false
+  },
+  "schema": {
+    "CorF": "str",
+    "LowRange": "int(0,255)",
+    "MediumRange": "int(0,255)",
+    "HighRange": "int(0,255)",
+    "QuietProfile": "bool",
+    "Create a Fan Speed entity in Home Assistant": "bool"
+  }
 }
