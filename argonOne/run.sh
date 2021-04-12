@@ -81,12 +81,12 @@ action() {
 ###
 #Inputs - inputs from Home Assistant Config
 ###
-CorF=$(cat options.json |jq -r '.CorF')
-t1=$(mkfloat $(cat options.json |jq -r '.LowRange'))
-t2=$(mkfloat $(cat options.json |jq -r '.MediumRange'))
-t3=$(mkfloat $(cat options.json |jq -r '.HighRange'))
-quiet=$(cat options.json |jq -r '.QuietProfile')
-createEntity=$(cat options.json |jq -r '."Create a Fan Speed entity in Home Assistant"')
+CorF=$(jq -r '.CorF'<options.json)
+t1=$(mkfloat $(jq -r '.LowRange' <options.json))
+t2=$(mkfloat $(jq -r '.MediumRange'<options.json))
+t3=$(mkfloat $(jq -r '.HighRange'<options.json))
+quiet=$(jq -r '.QuietProfile'<options.json)
+createEntity=$(jq -r '."Create a Fan Speed entity in Home Assistant"' <options.json)
 
 
 ###
@@ -119,10 +119,10 @@ fi;
 #Main Loop - read and react to changes in read temperature
 ###
 until false; do
-  read cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
-  cpuTemp=$(( $cpuRawTemp/1000 )) #built-in bash math
+  read -r cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
+  cpuTemp=$(( cpuRawTemp/1000 )) #built-in bash math
     unit="C"
-  if [ $CorF == "F" ]; then #convert to F
+  if [ "$CorF" == "F" ]; then #convert to F
     cpuTemp=$(( ( $cpuTemp *  9/5 ) + 32 ));
     unit="F"
   fi
@@ -130,11 +130,11 @@ until false; do
   echo "Current Temperature $cpuTemp °$unit"
 
   #Choose a fan setting position by temperature comparison
-  if ( fcomp $value '<=' $t1 ); then
+  if ( fcomp "$value" '<=' "$t1" ); then
     curPosition=1; #less than lowest
-  elif ( fcomp $t1 '<=' $value && fcomp $value '<=' $t2 ); then
+  elif ( fcomp "$t1" '<=' "$value" && fcomp "$value" '<=' "$t2" ); then
     curPosition=2; #between 1 and 2
-  elif ( fcomp $t2 '<=' $value && fcomp $value '<=' $t3 ); then
+  elif ( fcomp "$t2" '<=' "$value" && fcomp "$value" '<=' "$t3" ); then
     curPosition=3; #between 2 and 3
   else
     curPosition=4;
@@ -149,7 +149,7 @@ until false; do
          test $? -ne 0 && curPosition=lastPosition;
       ;;
       2)
-        if [ $quiet != true ]; then
+        if [ "$quiet" != true ]; then
           action 2 33 "Low" 0x0a
           test $? -ne 0 && curPosition=lastPosition;
         else
@@ -158,7 +158,7 @@ until false; do
         fi
         ;;
       3)
-        if [ $quiet != true ]; then
+        if [ "$quiet" != true ]; then
           action 3 66 "Medium" 0x042
           test $? -ne 0 && curPosition=lastPosition;
         else
