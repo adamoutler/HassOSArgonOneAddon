@@ -1,12 +1,16 @@
 ![image](gitResources/activecooling.jpg)
 
-This is an addon for Argon One in Home Assistantant activating and enabling automatic active cooling.
+This Addon enables and activates automated active cooling.
 
 # Installation
 
-Within HA, click Supervisor-> Add-on Store -> … button (in top left)-> Repositories and add this URL.
+Within HA
+1. click Supervisor
+2. click Add-on Store
+3. click the … button (in top left)
+4. Add this Repository URL.
 
-Click ArgonOne Temp Control and install.<br>
+Click ArgonOne Temp Control and install.
 ![image](gitResources/addonSelect.png)
 
 # Configuration
@@ -35,8 +39,8 @@ In order to enable i2C, you must follow one of the methods below.
 
 ## The easy way
 
-https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167
+[Use the addon](https://community.home-assistant.io/t/add-on-hassos-i2c-configurator/264167)
 
 ## The official way
 
-https://www.home-assistant.io/hassio/enable_i2c/
+[Use the guide](https://www.home-assistant.io/hassio/enable_i2c/)
