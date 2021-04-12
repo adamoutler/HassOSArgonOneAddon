@@ -7,9 +7,9 @@ This Addon enables and activates automated active cooling.
 Within HA
 
 1. Click Supervisor.
-2. Click Add-on Store.
-3. Click the … button (in top left).
-4. Add this Repository URL.
+1. Click Add-on Store.
+1. Click the … button (in top left).
+1. Add this Repository URL.
 
 Click ArgonOne Temp Control and install.
 ![image](gitResources/addonSelect.png)
