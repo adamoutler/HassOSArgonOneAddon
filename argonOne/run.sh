@@ -16,15 +16,20 @@ mkfloat() {
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
     local oldIFS="$IFS" op=$2 x y digitx digity
-    IFS='.' x=( ${1##+([0]|[-]|[+])}) y=( ${3##+([0]|[-]|[+])}) IFS="$oldIFS"
+    IFS='.'
+    x=( ${1##+([0]|[-]|[+])})
+    y=( ${3##+([0]|[-]|[+])})
+    IFS="$oldIFS"
     while [[ "${x[1]}${y[1]}" =~ [^0] ]]; do
-        digitx=${x[1]:0:1} digity=${y[1]:0:1}
+        digitx=${x[1]:0:1}
+        digity=${y[1]:0:1}
         (( x[0] = x[0] * 10 + ${digitx:-0} , y[0] = y[0] * 10 + ${digity:-0} ))
         x[1]=${x[1]:1} y[1]=${y[1]:1} 
     done
     [[ ${1:0:1} == '-' ]] && (( x[0] *= -1 ))
     [[ ${3:0:1} == '-' ]] && (( y[0] *= -1 ))
-    (( ${x:-0} $op ${y:-0} ))
+    x=$(( ${x:-0} $op ${y:-0} ))
+    return $x
 } 
 
 
