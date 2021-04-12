@@ -5,6 +5,7 @@ This Addon enables and activates automated active cooling.
 # Installation
 
 Within HA
+
 1. Click Supervisor.
 2. Click Add-on Store.
 3. Click the … button (in top left).
