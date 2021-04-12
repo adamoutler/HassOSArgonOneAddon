@@ -17,8 +17,8 @@ mkfloat() {
 fcomp() {
     local oldIFS="$IFS" op=$2 x y digitx digity
     IFS='.'
-    x=( ${1##+([0]|[-]|[+])})
-    y=( ${3##+([0]|[-]|[+])})
+    x=( ${1##+([0]|[-]|[+])} )
+    y=( ${3##+([0]|[-]|[+])} )
     IFS="$oldIFS"
     while [[ "${x[1]}${y[1]}" =~ [^0] ]]; do
         digitx=${x[1]:0:1}
@@ -52,7 +52,7 @@ fanSpeedReport(){
       *)
         icon=mdi:fan-off;
     esac
-    reqBody='{"state": "'${percent}'", "attributes": { "unit_of_measurement": "%", "icon": "'${icon}'", "mode": "'${mode}'", "fan level": "'${level}'", "friendly_name": "Argon Fan Speed"}}'
+    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
