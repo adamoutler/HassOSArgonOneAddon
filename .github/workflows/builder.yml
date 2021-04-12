@@ -84,7 +84,7 @@ jobs:
       - name: 🚀 Run Shellcheck
         uses: ludeeus/action-shellcheck@1.1.0
         env:
-          SHELLCHECK_OPTS: -s bash
+          SHELLCHECK_OPTS: -s bash -e SC1105
 
   lint-yamllint:
     name: YAMLLint
