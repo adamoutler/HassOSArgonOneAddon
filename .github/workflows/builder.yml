@@ -84,7 +84,7 @@ jobs:
       - name: 🚀 Run Shellcheck
         uses: ludeeus/action-shellcheck@1.1.0
         env:
-          SHELLCHECK_OPTS: -s bash -e SC1105 -e SC2206 -e SC2089 -e SC2046
+          SHELLCHECK_OPTS: -s bash -e SC1105 -e SC2206 -e SC2089 -e SC2046 -e SC2090
 
   lint-yamllint:
     name: YAMLLint
