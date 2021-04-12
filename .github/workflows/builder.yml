@@ -1,28 +1,121 @@
-name: 'Publish'
+name: Build add-on
+
+env:
+  BUILD_ARGS: "--test"
+  MONITORED_FILES: "apparmor.txt build.json config.json Dockerfile data rootfs"
 
 on:
-  release:
-    types: [published]
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
 
 jobs:
-  publish:
-    name: Publish
+  init:
     runs-on: ubuntu-latest
+    name: Initialize builds
+    outputs:
+      changed_files: ${{ steps.changed_files.outputs.all }}
+      changed_addons: ${{ steps.changed_addons.outputs.addons }}
+      changed: ${{ steps.changed_addons.outputs.changed }}
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v2
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Publish
-      uses: home-assistant/builder@master
-      with:
-        args: |
-          --armhf --armv7 --aarch64 \
-          --target argonOne \
-          -b main \
-          -r https://github.com/adamoutler/HassOSArgonOneAddon \
-          --docker-hub adamoutler/argononeactivecooling
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
+      - name: Get changed files
+        id: changed_files
+        uses: jitterbit/get-changed-files@v1
+
+      - name: Get add-ons
+        id: addons
+        run: |
+          declare -a addons
+          for addon in $(find ./ -name config.json | cut -d "/" -f2 | sort -u); do
+            addons+=("$addon");
+          done
+          echo "::set-output name=addons::${addons[@]}"
+      - name: Get changed add-ons
+        id: changed_addons
+        run: |
+          declare -a changed_addons
+          for addon in ${{ steps.addons.outputs.addons }}; do
+            if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon ]]; then
+              for file in ${{ env.MONITORED_FILES }}; do
+                  if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon/$file ]]; then
+                    if [[ ! "${changed_addons[@]}" =~ $addon ]]; then
+                      changed_addons+=("\"${addon}\",");
+                    fi
+                  fi
+              done
+            fi
+          done
+          changed=$(echo ${changed_addons[@]} | rev | cut -c 2- | rev)
+          if [[ -n ${changed} ]]; then
+            echo "Changed add-ons: $changed";
+            echo "::set-output name=changed::true";
+            echo "::set-output name=addons::[$changed]";
+          else
+            echo "No add-on had any monitored files changed (${{ env.MONITORED_FILES }})";
+          fi
+  build:
+    needs: init
+    runs-on: ubuntu-latest
+    if: needs.init.outputs.changed == 'true'
+    name: Build ${{ matrix.arch }} ${{ matrix.addon }} add-on
+    strategy:
+      matrix: 
+        addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
+        arch: ["aarch64", "amd64", "armhf", "armv7", "i386"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Get information
+        id: info
+        uses: home-assistant/actions/helpers/info@master
+        with:
+          path: "./${{ matrix.addon }}"
+
+      - name: Check add-on
+        id: check
+        run: |
+           if [[ "${{ steps.info.outputs.architectures }}" =~ ${{ matrix.arch }} ]]; then
+              echo "::set-output name=build_arch::true";
+            else
+              echo "${{ matrix.arch }} is not a valid arch for ${{ matrix.addon }}, skipping build";
+           fi
+           version=$(jq -r '.version' "./${{ matrix.addon }}/config.json")
+           echo "::set-output name=version::${version}";
+      - name: Set build arguments
+        if: steps.check.outputs.build_arch == 'true'
+        run: |
+          if [[ -z "${{ github.head_ref }}" ]] && [[ "${{ github.event_name }}" == "push" ]]; then
+              echo "BUILD_ARGS=--docker-hub-check" >> $GITHUB_ENV;
+          fi
+      - name: Login to DockerHub
+        if: env.BUILD_ARGS == '--docker-hub-check'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        if: env.BUILD_ARGS == '--docker-hub-check'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GIT_USER }}
+          password: ${{ secrets.GIT_TOKEN }}
+
+      - name: Build ${{ matrix.addon }} add-on
+        if: steps.check.outputs.build_arch == 'true'
+        uses: home-assistant/builder@2021.03.4
+        with:
+          args: |
+            ${{ env.BUILD_ARGS }} \
+            --${{ matrix.arch }} \
+            --target /data/${{ matrix.addon }} \
+            --with-codenotary "${{ secrets.VCN_USER }}" "${{ secrets.VCN_PASSWORD }}" "${{ secrets.VCN_ORG }}" \
+            --validate-from "${{ secrets.VCN_ORG }}" \
+            --addon
