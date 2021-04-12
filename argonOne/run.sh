@@ -71,7 +71,7 @@ action() {
   percentHex=${4}
   echo "Level $level - Fan $percent% ($name)";
   test "${createEntity}" == "true" && fanSpeedReport "$percent" "$level" "$name"  
-  i2cset -y 1 0x01a '${percentHex}'
+  i2cset -y 1 0x01a "${percentHex}"
   return ${?}
 }
 
