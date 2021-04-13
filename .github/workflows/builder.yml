@@ -16,18 +16,17 @@ jobs:
     name: Gather add-on information
     runs-on: ubuntu-latest
     outputs:
-      architectures: ${{ steps.information.outputs.architectures }}
-      description: ${{ steps.information.outputs.description }}
       name: ${{ steps.information.outputs.name }}
+      description: ${{ steps.information.output.description }}
+      architectures: ${{ steps.information.outputs.architectures }}
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v2.3.4
-      - name: 🚀 Run add-on information action
+        uses: actions/checkout@v2
+      - name: 🚀 Run add-on information
         id: information
         uses: frenck/action-addon-information@v1
-        with:
-          path: "./argonOne"
-
+        
+        
   lint-addon:
     name: Lint Add-on
     needs:
