@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v2
-        with:
-          ref: 'main'
       - name: 🚀 Run add-on information
         id: information
         uses: frenck/action-addon-information@v1.0.0
