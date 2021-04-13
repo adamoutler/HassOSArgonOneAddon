@@ -3,7 +3,10 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 WORKDIR /data
 
-RUN  apk add i2c-tools=4.2-r1 --no-cache; || apt-get -y update && apt-get -y install i2c-tools; exit 0
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+
+RUN  apk add i2c-tools=4.2-r1 --no-cache;
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
