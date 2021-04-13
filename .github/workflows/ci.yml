@@ -15,6 +15,13 @@ jobs:
   information:
     name: Gather add-on information
     runs-on: ubuntu-latest
+    outputs:
+      architectures: ${{ steps.information.outputs.architectures }}
+      build: ${{ steps.information.outputs.build }}
+      description: ${{ steps.information.outputs.description }}
+      name: ${{ steps.information.outputs.name }}
+      slug: ${{ steps.information.outputs.slug }}
+      target: ${{ steps.information.outputs.target }}
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v2.3.4
