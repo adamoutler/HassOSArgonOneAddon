@@ -27,6 +27,8 @@ jobs:
       - name: 🚀 Run add-on information
         id: information
         uses: frenck/action-addon-information@v1
+        with:
+          path: './argonOne'
         
         
   lint-addon:
