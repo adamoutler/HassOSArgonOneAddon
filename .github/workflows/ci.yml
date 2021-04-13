@@ -28,7 +28,7 @@ jobs:
         id: information
         uses: frenck/action-addon-information@v1
         with:
-          path: './HassOSArgonOneAddon/argonOne/'
+          path: './argonOne/'
         
         
   lint-addon:
