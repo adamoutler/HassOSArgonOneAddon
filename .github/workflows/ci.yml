@@ -26,7 +26,7 @@ jobs:
           ref: 'main'
       - name: 🚀 Run add-on information
         id: information
-        uses: frenck/action-addon-information@v1.1.1
+        uses: frenck/action-addon-information@v1.0.0
         with:
           path: './argonOne/'
         
