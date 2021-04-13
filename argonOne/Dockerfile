@@ -9,7 +9,7 @@ WORKDIR /data
 
 
 
-RUN  apk add i2c-tools=4.2-r1 --no-cache;
+RUN  apk add i2c-tools=4.2-r0 --no-cache;
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
