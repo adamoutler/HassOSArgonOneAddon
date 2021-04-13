@@ -25,9 +25,6 @@ jobs:
       - name: 🚀 Run add-on information
         id: information
         uses: frenck/action-addon-information@v1.0.0
-        with:
-          path: /home/runner/work/HassOSArgonOneAddon/HassOSArgonOneAddon/argonOne
-        
         
   lint-addon:
     name: Lint Add-on
