@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
       - name: 🚀 Run add-on information
         id: information
         uses: frenck/action-addon-information@v1.0.0
