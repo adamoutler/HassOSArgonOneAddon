@@ -1,4 +1,4 @@
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64:9.1.7
 FROM $BUILD_FROM
 ENV LANG C.UTF-8
 WORKDIR /data
