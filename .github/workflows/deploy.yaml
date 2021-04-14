@@ -109,13 +109,9 @@ jobs:
           tags: adamoutler/hassosargonone:latest
 
           # yamllint disable rule:line-length
-                # yamllint enable rule:line-length
+          # yamllint enable rule:line-length
           context: ${{ needs.information.outputs.target }}
           file: ${{ needs.information.outputs.target }}/Dockerfile
-          cache-from: |
-            type=local,src=/tmp/.docker-cache
-            ghcr.io/adamoutler/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:edge
-          cache-to: type=local,mode=max,dest=/tmp/.docker-cache
           platforms: ${{ steps.flags.outputs.platform }}
           build-args: |
             BUILD_ARCH=${{ matrix.architecture }}
