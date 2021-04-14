@@ -1,7 +1,6 @@
 ---
 name: Deploy
 
-
 # yamllint disable-line rule:truthy
 on:
   release:
