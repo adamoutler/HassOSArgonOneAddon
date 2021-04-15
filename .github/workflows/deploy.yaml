@@ -106,7 +106,7 @@ jobs:
         uses: docker/build-push-action@v2.4.0
         with:
           push: true
-          tags: adamoutler/hassosargonone
+          tags: adamoutler/hassosargononeaddon
 
           # yamllint disable rule:line-length
           # yamllint enable rule:line-length
