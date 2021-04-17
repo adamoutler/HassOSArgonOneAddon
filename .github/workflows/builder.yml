@@ -63,7 +63,6 @@ jobs:
   build:
     needs: init
     runs-on: ubuntu-latest
-    if: needs.init.outputs.changed == 'true'
     name: Build ${{ matrix.arch }} ${{ matrix.addon }} add-on
     strategy:
       matrix: 
@@ -91,7 +90,6 @@ jobs:
            version=$(jq -r '.version' "./${{ matrix.addon }}/config.json")
            echo "::set-output name=version::${version}";
       - name: Set build arguments
-        if: steps.check.outputs.build_arch == 'true'
         run: |
           if [[ -z "${{ github.head_ref }}" ]] && [[ "${{ github.event_name }}" == "push" ]]; then
               echo "BUILD_ARGS=--docker-hub-check" >> $GITHUB_ENV;
@@ -112,7 +110,6 @@ jobs:
           password: ${{ secrets.MYGITHUBTOKEN }}
 
       - name: Build ${{ matrix.addon }} add-on
-        if: steps.check.outputs.build_arch == 'true'
         uses: home-assistant/builder@2021.04.1
         with:
           args: |
