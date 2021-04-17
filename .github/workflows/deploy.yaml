@@ -41,7 +41,7 @@ jobs:
         id: release
         run: |
           sha="${{ github.sha }}"
-          environment="edge"
+          environment="main"
           version="${sha:0:7}"
           if [[ "${{ github.event_name }}" = "release" ]]; then
             version="${{ github.event.release.tag_name }}"
@@ -96,6 +96,8 @@ jobs:
             echo "::error ::Could not determine platform for architecture ${{ matrix.architecture }}"
             exit 1
           fi
+      - name: environmental variables
+        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: 🏗  Login to GitHub Container Registry
         uses: docker/login-action@v1.8.0
         with:
