@@ -108,8 +108,8 @@ jobs:
         uses: docker/build-push-action@v2.4.0
         with:
           push: true
-          tags:  ghcr.io/hassosargononeaddon/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:${{ needs.information.outputs.environment }}
-            ghcr.io/hassosargononeaddon/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:${{ needs.information.outputs.version }}
+          tags:  ghcr.io/adamoutler/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:${{ needs.information.outputs.environment }}
+            ghcr.io/adamoutler/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:${{ needs.information.outputs.version }}
           # yamllint disable rule:line-length
           # yamllint enable rule:line-length
           context: ${{ needs.information.outputs.target }}
