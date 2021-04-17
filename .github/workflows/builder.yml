@@ -96,6 +96,7 @@ jobs:
         uses: frenck/action-yamllint@v1.1
         with:
           community: "true"
+          path: "argonOne/config.json"
 
   lint-prettier:
     name: Prettier
