@@ -40,7 +40,6 @@ jobs:
       - name: 🚀 Run Add-on Lint
         uses: frenck/action-addon-linter@v2
         with:
-          community: true
           path: "./${{ needs.information.outputs.target }}"
 
   lint-hadolint:
