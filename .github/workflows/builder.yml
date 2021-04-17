@@ -1,9 +1,7 @@
-name: Build add-on
+---
+name: CI
 
-env:
-  BUILD_ARGS: "--test"
-  MONITORED_FILES: "apparmor.txt build.json config.json Dockerfile data rootfs"
-
+# yamllint disable-line rule:truthy
 on:
   push:
   pull_request:
@@ -12,110 +10,171 @@ on:
       - reopened
       - synchronize
   workflow_dispatch:
-  
+
 jobs:
-  init:
+  information:
+    name: Gather add-on information
     runs-on: ubuntu-latest
-    name: Initialize builds
     outputs:
-      changed_files: ${{ steps.changed_files.outputs.all }}
-      changed_addons: ${{ steps.changed_addons.outputs.addons }}
-      changed: ${{ steps.changed_addons.outputs.changed }}
+      architectures: ${{ steps.information.outputs.architectures }}
+      build: ${{ steps.information.outputs.build }}
+      description: ${{ steps.information.outputs.description }}
+      name: ${{ steps.information.outputs.name }}
+      slug: ${{ steps.information.outputs.slug }}
+      target: ${{ steps.information.outputs.target }}
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run add-on information action
+        id: information
+        uses: frenck/action-addon-information@v1.0.0
 
-      - name: Get changed files
-        id: changed_files
-        uses: jitterbit/get-changed-files@v1
-
-      - name: Get add-ons
-        id: addons
-        run: |
-          declare -a addons
-          for addon in $(find ./ -name config.json | cut -d "/" -f2 | sort -u); do
-            addons+=("$addon");
-          done
-          echo "::set-output name=addons::${addons[@]}"
-      - name: Get changed add-ons
-        id: changed_addons
-        run: |
-          declare -a changed_addons
-          for addon in ${{ steps.addons.outputs.addons }}; do
-            if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon ]]; then
-              for file in ${{ env.MONITORED_FILES }}; do
-                  if [[ "${{ steps.changed_files.outputs.all }}" =~ $addon/$file ]]; then
-                    if [[ ! "${changed_addons[@]}" =~ $addon ]]; then
-                      changed_addons+=("\"${addon}\",");
-                    fi
-                  fi
-              done
-            fi
-          done
-          changed=$(echo ${changed_addons[@]} | rev | cut -c 2- | rev)
-          if [[ -n ${changed} ]]; then
-            echo "Changed add-ons: $changed";
-            echo "::set-output name=changed::true";
-            echo "::set-output name=addons::[$changed]";
-          else
-            echo "No add-on had any monitored files changed (${{ env.MONITORED_FILES }})";
-          fi
-  build:
-    needs: init
+  lint-addon:
+    name: Lint Add-on
+    needs:
+      - information
     runs-on: ubuntu-latest
-    name: Build ${{ matrix.arch }} ${{ matrix.addon }} add-on
-    strategy:
-      matrix: 
-        addon: ${{ fromJson(needs.init.outputs.changed_addons) }}
-        arch: ["aarch64", "armhf", "armv7" ]
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-
-      - name: Get information
-        id: info
-        uses: home-assistant/actions/helpers/info@master
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run Add-on Lint
+        uses: frenck/action-addon-linter@v2
         with:
-          path: "./${{ matrix.addon }}"
+          community: true
+          path: "./${{ needs.information.outputs.target }}"
 
-      - name: Check add-on
-        id: check
+  lint-hadolint:
+    name: Hadolint
+    needs:
+      - information
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run Hadolint
+        uses: brpaz/hadolint-action@v1.4.0
+        with:
+          dockerfile: "./${{ needs.information.outputs.target }}/Dockerfile"
+
+  lint-json:
+    name: JSON Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run JQ
         run: |
-           if [[ "${{ steps.info.outputs.architectures }}" =~ ${{ matrix.arch }} ]]; then
-              echo "::set-output name=build_arch::true";
-            else
-              echo "${{ matrix.arch }} is not a valid arch for ${{ matrix.addon }}, skipping build";
-           fi
-           version=$(jq -r '.version' "./${{ matrix.addon }}/config.json")
-           echo "::set-output name=version::${version}";
-      - name: Set build arguments
+          shopt -s globstar
+          cat **/*.json | jq '.'
+  lint-markdown:
+    name: MarkdownLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run mdl
+        uses: actionshub/markdownlint@2.0.2
+
+  lint-shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run Shellcheck
+        uses: ludeeus/action-shellcheck@1.1.0
+        env:
+          SHELLCHECK_OPTS: -s bash
+
+  lint-yamllint:
+    name: YAMLLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run YAMLLint
+        uses: frenck/action-yamllint@v1.1
+
+  lint-prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🚀 Run Prettier
+        uses: creyD/prettier_action@v3.3
+        with:
+          prettier_options: --write **/*.{json,js,md,yaml}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: Build ${{ matrix.architecture }}
+    needs:
+      - information
+      - lint-addon
+      - lint-hadolint
+      - lint-json
+      - lint-markdown
+      - lint-prettier
+      - lint-shellcheck
+      - lint-yamllint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture: ${{ fromJson(needs.information.outputs.architectures) }}
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v2.3.4
+      - name: 🏗 Set up build cache
+        id: cache
+        uses: actions/cache@v2.1.5
+        with:
+          path: /tmp/.docker-cache
+          key: docker-${{ github.ref }}-${{ matrix.architecture }}-${{ github.sha }}
+          restore-keys: |
+            docker-${{ github.ref }}-${{ matrix.architecture }}
+      - name: 🏗 Set up QEMU
+        uses: docker/setup-qemu-action@v1.0.2
+      - name: 🏗 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1.1.2
+      - name: ℹ️ Compose build flags
+        id: flags
         run: |
-          if [[ -z "${{ github.head_ref }}" ]] && [[ "${{ github.event_name }}" == "push" ]]; then
-              echo "BUILD_ARGS=--docker-hub-check" >> $GITHUB_ENV;
+          echo "::set-output name=date::$(date +"%Y-%m-%dT%H:%M:%SZ")"
+          from=$(jq --raw-output ".build_from.${{ matrix.architecture }}" "${{ needs.information.outputs.build }}")
+          echo "::set-output name=from::${from}"
+          if [[ "${{ matrix.architecture}}" = "amd64" ]]; then
+            echo "::set-output name=platform::linux/amd64"
+          elif [[ "${{ matrix.architecture }}" = "i386" ]]; then
+            echo "::set-output name=platform::linux/386"
+          elif [[ "${{ matrix.architecture }}" = "armhf" ]]; then
+            echo "::set-output name=platform::linux/arm/v6"
+          elif [[ "${{ matrix.architecture }}" = "armv7" ]]; then
+            echo "::set-output name=platform::linux/arm/v7"
+          elif [[ "${{ matrix.architecture }}" = "aarch64" ]]; then
+            echo "::set-output name=platform::linux/arm64/v8"
+          else
+            echo "::error ::Could not determine platform for architecture ${{ matrix.architecture }}"
+            exit 1
           fi
-      - name: Login to DockerHub
-        if: env.BUILD_ARGS == '--docker-hub-check'
-        uses: docker/login-action@v1
+      - name: 🚀 Build
+        uses: docker/build-push-action@v2.4.0
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to GitHub Container Registry
-        if: env.BUILD_ARGS == '--docker-hub-check'
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.MYGITHUBTOKEN }}
-
-      - name: Build ${{ matrix.addon }} add-on
-        uses: home-assistant/builder@2021.04.1
-        with:
-          args: |
-            ${{ env.BUILD_ARGS }} \
-            --${{ matrix.arch }} \
-            --target /data/${{ matrix.addon }} \
-            --with-codenotary "${{ secrets.VCN_USER }}" "${{ secrets.VCN_PASSWORD }}" "${{ secrets.VCN_ORG }}" \
-            --validate-from "${{ secrets.VCN_ORG }}" \
-            --addon
+          push: false
+          context: ${{ needs.information.outputs.target }}
+          file: ${{ needs.information.outputs.target }}/Dockerfile
+          cache-from: |
+            type=local,src=/tmp/.docker-cache
+            ghcr.io/hassio-addons/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:edge
+          cache-to: type=local,mode=max,dest=/tmp/.docker-cache
+          platforms: ${{ steps.flags.outputs.platform }}
+          build-args: |
+            BUILD_ARCH=${{ matrix.architecture }}
+            BUILD_DATE=${{ steps.flags.outputs.date }}
+            BUILD_DESCRIPTION=${{ needs.information.outputs.description }}
+            BUILD_FROM=${{ steps.flags.outputs.from }}
+            BUILD_NAME=${{ needs.information.outputs.name }}
+            BUILD_REF=${{ github.sha }}
+            BUILD_REPOSITORY=${{ github.repository }}
+            BUILD_VERSION=edge
