@@ -149,6 +149,12 @@ jobs:
             echo "::error ::Could not determine platform for architecture ${{ matrix.architecture }}"
             exit 1
           fi
+      - name: get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: 'argonOne/config.json'
+          prop_path: 'version'
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
@@ -158,7 +164,7 @@ jobs:
         uses: docker/build-push-action@v2.4.0
         with:
           push: true
-          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:latest
+          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:${{steps.version.outputs.prop}} 
           context: ${{ needs.information.outputs.target }}
           file: ${{ needs.information.outputs.target }}/Dockerfile
           cache-from: |
