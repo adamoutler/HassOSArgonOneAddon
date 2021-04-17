@@ -5,11 +5,14 @@ env:
   SHELLCHECK_OPTS: -e SC1008 -s bash
 
 on:
-  pull_request:
-    branches: ["master"]
   push:
-    branches: ["master"]
-
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+  
 jobs:
   hadolint:
     runs-on: ubuntu-latest
