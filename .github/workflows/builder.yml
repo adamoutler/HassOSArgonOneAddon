@@ -158,7 +158,7 @@ jobs:
         uses: docker/build-push-action@v2.4.0
         with:
           push: true
-          tags: adamoutler/hassosargonone:${{ matrix.architecture }}
+          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:latest
           context: ${{ needs.information.outputs.target }}
           file: ${{ needs.information.outputs.target }}/Dockerfile
           cache-from: |
