@@ -5,11 +5,14 @@ env:
   MONITORED_FILES: "apparmor.txt build.json config.json Dockerfile data rootfs"
 
 on:
-  pull_request:
-    branches: ["master"]
   push:
-    branches: ["master"]
-
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+  
 jobs:
   init:
     runs-on: ubuntu-latest
