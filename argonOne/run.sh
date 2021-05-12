@@ -38,7 +38,7 @@ fanSpeedReport(){
    mode=$3;
    case $level in
       1)
-        icon=mdi:fan-off;
+        icon=mdi:fan;
         ;;
       2)
         icon=mdi:fan-speed-1;
@@ -50,7 +50,7 @@ fanSpeedReport(){
         icon=mdi:fan-speed-3;
         ;;
       *)
-        icon=mdi:fan-off;
+        icon=mdi:fan;
     esac
     reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
