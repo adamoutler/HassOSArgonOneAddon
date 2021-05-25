@@ -18,7 +18,8 @@
     "MediumRange": 140,
     "HighRange": 150,
     "QuietProfile": true,
-    "Create a Fan Speed entity in Home Assistant": false
+    "Create a Fan Speed entity in Home Assistant": false,
+    "Log current temperature every 30 seconds": true
   },
   "schema": {
     "CorF": "str",
@@ -26,6 +27,7 @@
     "MediumRange": "int(0,255)",
     "HighRange": "int(0,255)",
     "QuietProfile": "bool",
-    "Create a Fan Speed entity in Home Assistant": "bool"
+    "Create a Fan Speed entity in Home Assistant": "bool",
+    "Log current temperature every 30 seconds": "bool"
   }
 }

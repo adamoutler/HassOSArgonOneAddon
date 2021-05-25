@@ -87,7 +87,7 @@ t2=$(mkfloat $(jq -r '.MediumRange'<options.json))
 t3=$(mkfloat $(jq -r '.HighRange'<options.json))
 quiet=$(jq -r '.QuietProfile'<options.json)
 createEntity=$(jq -r '."Create a Fan Speed entity in Home Assistant"' <options.json)
-
+logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 
 ###
 #initial setup - prepare things for operation
@@ -127,7 +127,7 @@ until false; do
     unit="F"
   fi
   value=$(mkfloat $cpuTemp)
-  echo "Current Temperature $cpuTemp °$unit"
+  test "${logTemp}" == "true" && echo "Current Temperature $cpuTemp °$unit"
 
   #Choose a fan setting position by temperature comparison
   if ( fcomp "$value" '<=' "$t1" ); then

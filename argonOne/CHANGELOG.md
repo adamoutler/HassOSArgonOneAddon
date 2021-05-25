@@ -2,6 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **22**     | Add option to not log fan speed.                          |
 | **21**     | Use fan instead of fan-off icon.                          |
 | **20**     | Deploy from dockerhub image for fast install.             |
 | **19/dev** | Automatic builds with Actions on Github.                  |
