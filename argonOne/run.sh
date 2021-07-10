@@ -53,7 +53,7 @@ fanSpeedReport(){
       *)
         icon=mdi:fan;
     esac
-    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "temp": "'"${temp}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
+    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "temperature": "'"${temp}"'",, "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
@@ -72,8 +72,8 @@ action() {
   percentHex=${4}
   temp=${4}
   echo "Level $level - Fan $percent% ($name)";
-  test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
   i2cset -y 1 0x01a "${percentHex}"
+  test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}" &
   return ${?}
 }
 
@@ -199,5 +199,5 @@ until false; do
   fi
   sleep 30;
   ((thirtySecondsCount++));
-  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}"
+  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp/.*//}"
 done
