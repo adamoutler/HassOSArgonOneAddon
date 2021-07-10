@@ -120,7 +120,7 @@ fi;
 ###
 #Main Loop - read and react to changes in read temperature
 ###
-int thirtySecondsCount=0;
+thirtySecondsCount=0;
 curPosition=0;
 curPositionName="off";
 fanPercent=0;
