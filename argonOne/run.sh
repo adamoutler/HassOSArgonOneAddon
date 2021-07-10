@@ -33,10 +33,11 @@ fcomp() {
 
 
 fanSpeedReport(){
-   percent=$1;
-   level=$2;
-   mode=$3;
-   case $level in
+   percent=${1};
+   level=${2};
+   mode=${3};
+   temp=${4};
+   case ${level} in
       1)
         icon=mdi:fan;
         ;;
@@ -52,7 +53,7 @@ fanSpeedReport(){
       *)
         icon=mdi:fan;
     esac
-    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
+    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "temp:: "'"${temp}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
@@ -69,8 +70,9 @@ action() {
   percent=${2}
   name=${3}
   percentHex=${4}
+  temp=${4}
   echo "Level $level - Fan $percent% ($name)";
-  test "${createEntity}" == "true" && fanSpeedReport "$percent" "$level" "$name"  
+  test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
   i2cset -y 1 0x01a "${percentHex}"
   return ${?}
 }
@@ -118,6 +120,13 @@ fi;
 ###
 #Main Loop - read and react to changes in read temperature
 ###
+int thirtySecondsCount=0;
+curPosition=0;
+curPositionName="off";
+fanPercent=0;
+hexValue=0;
+
+
 until false; do
   read -r cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
   cpuTemp=$(( cpuRawTemp/1000 )) #built-in bash math
@@ -145,34 +154,51 @@ until false; do
     #convert fan position to a level and activate fan
     case $curPosition in
       1)
-         action 1 0 "OFF" 0x00
-         test $? -ne 0 && curPosition=lastPosition;
+          curPosition=1;
+          curPositionName="OFF";
+          fanPercent=0;
+          hexValue=0x00;
       ;;
       2)
         if [ "$quiet" != true ]; then
-          action 2 33 "Low" 0x0a
-          test $? -ne 0 && curPosition=lastPosition;
+          curPosition=0;
+          curPositionName="Low";
+          fanPercent=33;
+          hexValue=0x21;
         else
-          action 2 1 "Quiet Low" 0x01
-          test $? -ne 0 && curPosition=lastPosition;
+          curPosition=2;
+          curPositionName="Quiet Low";
+          fanPercent=1;
+          hexValue=0x01;
         fi
         ;;
       3)
         if [ "$quiet" != true ]; then
-          action 3 66 "Medium" 0x042
-          test $? -ne 0 && curPosition=lastPosition;
+          curPosition=3;
+          curPositionName="Medium";
+          fanPercent=66;
+          hexValue=0x42;
         else
-          action 3 3 "Quiet Medium" 0x03
-          test $? -ne 0 && curPosition=lastPosition;
+          curPosition=3;
+          curPositionName="Quiet Medium";
+          fanPercent=3;
+          hexValue=0x03;
         fi
         ;;
       *)
-        action 4 100 "High" 0x64
-        test $? -ne 0 && curPosition=lastPosition;
+        curPosition=4;
+        curPositionName="High";
+        fanPercent=100;
+        hexValue=0x64;
         ;;
     esac
+    action ${curPosition} ${fanPercent} ${curPositionName} ${hexValue} ${value}
+    test $? -ne 0 && curPosition=lastPosition;
     set -e
     lastPosition=$curPosition;
   fi
   sleep 30;
+  ((thirtySecondsCount++));
+  isTenMinues=$((${thirtySecondsCount}%20));
+  test $isTenMinutes == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
 done
