@@ -96,7 +96,7 @@ logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 ###
 curPosition=-1;
 lastPosition=-1;
-trap 'i2cset -y 1 0x01a 0x64;lastPosition=-1;curPosition=-1' EXIT INT TERM
+trap 'i2cset -y 1 0x01a 0x64;lastPosition=-1;curPosition=-1' ERR EXIT INT TERM
 
 if [ ! -e /dev/i2c-1 ]; then
   echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
@@ -198,6 +198,6 @@ until false; do
   sleep 30;
   ((thirtySecondsCount++));
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp/.*//}"
-  set -e
+  set -eE
 
 done
