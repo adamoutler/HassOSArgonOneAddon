@@ -192,12 +192,12 @@ until false; do
         hexValue=0x64;
         ;;
     esac
-    action ${curPosition} ${fanPercent} ${curPositionName} ${hexValue} ${value}
+    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${value}"
     test $? -ne 0 && curPosition=lastPosition;
     set -e
     lastPosition=$curPosition;
   fi
   sleep 30;
   ((thirtySecondsCount++));
-  test $((${thirtySecondsCount}%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
+  test $(($thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
 done
