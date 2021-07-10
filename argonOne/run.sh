@@ -148,9 +148,8 @@ until false; do
   else
     curPosition=4;
   fi
+  set +e
   if [ $lastPosition != $curPosition ]; then
-    set +e
-
     #convert fan position to a level and activate fan
     case $curPosition in
       1)
@@ -194,10 +193,11 @@ until false; do
     esac
     action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${value}"
     test $? -ne 0 && curPosition=lastPosition;
-    set -e
     lastPosition=$curPosition;
   fi
   sleep 30;
   ((thirtySecondsCount++));
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp/.*//}"
+  set -e
+
 done
