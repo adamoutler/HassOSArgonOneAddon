@@ -2,6 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **23**     | Temperature in Speed Entity. Entity reported every 10 min |
 | **22**     | Add option to not log fan speed.                          |
 | **21**     | Use fan instead of fan-off icon.                          |
 | **20**     | Deploy from dockerhub image for fast install.             |
