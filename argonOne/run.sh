@@ -70,8 +70,8 @@ action() {
   percent=${2}
   name=${3}
   percentHex=${4}
-  temp=${4}
-  echo "Level $level - Fan $percent% ($name)";
+  temp=${5}
+  printf '%(%Y-%m-%d_%H:%M:%S)T Level '"${level}"' - Fan '"${percent}"'% ('"${name}")\n';
   i2cset -y 1 0x01a "${percentHex}"
   test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}" &
   return ${?}
@@ -191,13 +191,13 @@ until false; do
         hexValue=0x64;
         ;;
     esac
-    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${value}"
+    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${cpuTemp}"
     test $? -ne 0 && curPosition=lastPosition;
     lastPosition=$curPosition;
   fi
   sleep 30;
   ((thirtySecondsCount++));
-  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp/.*//}"
+  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}"
   set -eE
 
 done
