@@ -73,7 +73,7 @@ action() {
   percentHex=${4}
   temp=${5}
   CorF=${6}
-  printf '%(%Y-%m-%d_%H:%M:%S)T'
+  printf '%(%Y-%m-%d_%H:%M:%S)T '
   echo "Level ${level} - Fan ${percent}% (${name})";
   i2cset -y 1 0x01a "${percentHex}"
   test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}" "${CorF}" &
@@ -111,7 +111,7 @@ i2cDetect=$(i2cdetect -y -a 1);
 echo -e "${i2cDetect}"
 
 if [[ "$i2cDetect" != *"1a"* ]]; then 
-    echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
+  echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
 else 
   echo "Settings initialized. Argon One Detected. Beginning monitor.."
 fi;
