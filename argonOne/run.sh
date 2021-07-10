@@ -199,5 +199,5 @@ until false; do
   fi
   sleep 30;
   ((thirtySecondsCount++));
-  test $(($thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
+  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}"
 done
