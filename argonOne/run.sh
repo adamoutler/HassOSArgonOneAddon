@@ -37,6 +37,7 @@ fanSpeedReport(){
    level=${2};
    mode=${3};
    temp=${4};
+   CorF=${5};
    case ${level} in
       1)
         icon=mdi:fan;
@@ -53,7 +54,7 @@ fanSpeedReport(){
       *)
         icon=mdi:fan;
     esac
-    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "temperature": "'"${temp}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
+    reqBody='{"state": "'"${percent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${mode}"'", "Temperature ${CorF}": "'"${temp}"'", "fan level": "'"${level}"'", "friendly_name": "Argon Fan Speed"}}'
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
@@ -71,10 +72,11 @@ action() {
   name=${3}
   percentHex=${4}
   temp=${5}
+  CorF=${6}
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo "Level ${level} - Fan ${percent}% (${name})";
   i2cset -y 1 0x01a "${percentHex}"
-  test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}" &
+  test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}" "${CorF}" &
   return ${?}
 }
 
@@ -192,13 +194,13 @@ until false; do
         hexValue=0x64;
         ;;
     esac
-    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${cpuTemp}"
+    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${cpuTemp}" "${CorF}"
     test $? -ne 0 && curPosition=lastPosition;
     lastPosition=$curPosition;
   fi
   sleep 30;
   ((thirtySecondsCount++));
-  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}"
+  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}" "${CorF}"
   set -eE
 
 done
