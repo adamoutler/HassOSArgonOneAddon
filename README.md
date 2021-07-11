@@ -18,11 +18,11 @@ Click ArgonOne Temp Control and install.
 
 ![image](gitResources/Configuration.png)
 
-## Celcius or Farenheit
+## Celsius or Fahrenheit
 
-Choose Celcius or Farenheit.
+Choose Celsius or Fahrenheit.
 
-- **CorF** - Configures Celcius or Fahrenheit.
+- **CorF** - Configures Celsius or Fahrenheit.
 
 ## Temperature Ranges
 
@@ -30,7 +30,7 @@ Choose Celcius or Farenheit.
 
 Set your fan ranges appropriately.
 
-- **LowRange** Minimum Temperature to turn oon 33%. Lower will turn the fan off.
+- **LowRange** Minimum Temperature to turn on 33%. Lower will turn the fan off.
 - **MediumRange** to be the temperature divider between 33 and 66%.
 - **HighRange** to be the maximum temperature before 100% fan.
 
