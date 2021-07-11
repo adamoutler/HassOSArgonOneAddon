@@ -2,6 +2,8 @@ name: CI
 
 # yamllint disable-line rule:truthy
 on:
+  created:
+  edited:
   pull_request:
      types:
       - opened
