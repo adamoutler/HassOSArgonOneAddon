@@ -114,7 +114,6 @@ echo -e "${i2cDetect}"
 if [[ "$i2cDetect" != *"1a"* ]]; then 
   echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
 else 
-  echo "Settings initialized. Argon One Detected. Beginning monitor.."
   if [ "$alwaysOn" == true ]; then
     echo "Setting Power Mode: Always On";
     i2cset -y 1 0x01a 0xfe
@@ -122,6 +121,7 @@ else
     echo "Setting Power Mode: Power Button";
     i2cset -y 1 0x01a 0xfd
   fi
+  echo "Settings initialized. Argon One Detected. Beginning monitor.."
 fi;
 
 
