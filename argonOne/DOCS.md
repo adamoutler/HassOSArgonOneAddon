@@ -2,11 +2,11 @@
 
 ![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/Configuration.png)
 
-## Celcius or Farenheit
+## Celsius or Fahrenheit
 
-Choose Celcius or Farenheit.
+Choose Celsius or Fahrenheit.
 
-- **CorF** - Configures Celcius or Fahrenheit.
+- **CorF** - Configures Celsius or Fahrenheit.
 
 ## Temperature Ranges
 
@@ -14,7 +14,7 @@ Choose Celcius or Farenheit.
 
 Set your fan ranges appropriately.
 
-- **LowRange** Minimum Temperature to turn oon 33%. Anything lower will turn off.
+- **LowRange** Minimum Temperature to turn on 33%. Anything lower will turn off.
 - **MediumRange** to be the temperature divider between 33 and 66%.
 - **HighRange** to be the maximum temperature before 100% fan.
 
