@@ -9,7 +9,6 @@ on:
       - reopened
       - synchronize
   workflow_dispatch:
-  
 jobs:
   information:
     name: Gather add-on information
