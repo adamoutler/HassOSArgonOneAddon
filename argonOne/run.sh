@@ -191,7 +191,7 @@ until false; do
     lastPosition=$curPosition;
   fi
   sleep 30;
-  (( thirtySecondsCount++ ));
+  thirtySecondsCount=$((thirtySecondsCount + 1))
   #thirtySecondsCount mod 20 will be 0 once every 20 times, or approx. 10 minutes.
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}" "${CorF}"
 done
