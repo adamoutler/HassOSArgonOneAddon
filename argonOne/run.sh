@@ -99,7 +99,9 @@ logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 ###
 curPosition=-1;
 lastPosition=-1;
-trap 'i2cset -y 1 0x01a 0x64;lastPosition=-1;curPosition=-1' ERR EXIT INT TERM
+
+#Trap exits and set fan to 100% like a safe mode.
+trap 'i2cset -y 1 0x01a 0x64;lastPosition=-1;curPosition=-1; echo Safe Mode Activated!; exit 0;' ERR EXIT INT TERM
 
 if [ ! -e /dev/i2c-1 ]; then
   echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
@@ -116,19 +118,18 @@ else
   echo "Settings initialized. Argon One Detected. Beginning monitor.."
 fi;
 
-
-
-
+#Counts the number of repetitions so we can set a 10minute count. 
+thirtySecondsCount=0;
+#the current position, 0=unitialized. 1=off, 2=low, 3=medium, 4=high.
+curPosition=0;
+#The name of the current position.
+curPositionName="off";
+#The human readable percentage of the fan speed
+fanPercent=0;
 
 ###
 #Main Loop - read and react to changes in read temperature
 ###
-thirtySecondsCount=0;
-curPosition=0;
-curPositionName="off";
-fanPercent=0;
-hexValue=0;
-
 
 until false; do
   read -r cpuRawTemp</sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
@@ -138,7 +139,7 @@ until false; do
     cpuTemp=$(( ( cpuTemp *  9/5 ) + 32 ));
     unit="F"
   fi
-  value=$(mkfloat $cpuTemp)
+  value=$(mkfloat $cpuTemp) #CPU Temp in floating point format.
   test "${logTemp}" == "true" && echo "Current Temperature $cpuTemp °$unit"
 
   #Choose a fan setting position by temperature comparison
@@ -153,25 +154,22 @@ until false; do
   fi
   set +e
   if [ $lastPosition != $curPosition ]; then
-    #convert fan position to a level and activate fan
+    #based on current position, and quiet mode, we can set the name and percentage of fanspeed.
     case $curPosition in
       1)
           curPosition=1;
           curPositionName="OFF";
           fanPercent=0;
-          hexValue=0x00;
-      ;;
+        ;;
       2)
         if [ "$quiet" != true ]; then
-          curPosition=0;
+          curPosition=2;
           curPositionName="Low";
           fanPercent=33;
-          hexValue=0x21;
         else
           curPosition=2;
           curPositionName="Quiet Low";
           fanPercent=1;
-          hexValue=0x01;
         fi
         ;;
       3)
@@ -179,27 +177,26 @@ until false; do
           curPosition=3;
           curPositionName="Medium";
           fanPercent=66;
-          hexValue=0x42;
         else
           curPosition=3;
           curPositionName="Quiet Medium";
           fanPercent=3;
-          hexValue=0x03;
         fi
         ;;
       *)
         curPosition=4;
         curPositionName="High";
         fanPercent=100;
-        hexValue=0x64;
         ;;
     esac
-    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${hexValue}" "${cpuTemp}" "${CorF}"
+    fanPercentHex=$(printf '%x\n' ${fanPercent})
+    action "${curPosition}" "${fanPercent}" "${curPositionName}" "${fanPercentHex}" "${cpuTemp}" "${CorF}"
     test $? -ne 0 && curPosition=lastPosition;
     lastPosition=$curPosition;
   fi
   sleep 30;
   ((thirtySecondsCount++));
+  #thirtySecondsCount mod 20 will be 0 once every 20 times, or approx. 10 minutes.  
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}" "${CorF}"
   set -eE
 
