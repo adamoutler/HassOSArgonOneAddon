@@ -190,7 +190,7 @@ until false; do
         fanPercent=100;
         ;;
     esac
-    fanPercentHex=$(printf '%x\n' ${fanPercent})
+    fanPercentHex=$(printf '%x' ${fanPercent})
     action "${curPosition}" "${fanPercent}" "${curPositionName}" "${fanPercentHex}" "${cpuTemp}" "${CorF}"
     test $? -ne 0 && curPosition=lastPosition;
     lastPosition=$curPosition;
