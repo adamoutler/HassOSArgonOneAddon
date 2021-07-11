@@ -93,6 +93,7 @@ t3=$(mkfloat $(jq -r '.HighRange'<options.json))
 quiet=$(jq -r '.QuietProfile'<options.json)
 createEntity=$(jq -r '."Create a Fan Speed entity in Home Assistant"' <options.json)
 logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
+alwaysOn=$(jq -r '.AlwaysOn'<options.json)
 
 ###
 #initial setup - prepare things for operation
@@ -114,6 +115,13 @@ if [[ "$i2cDetect" != *"1a"* ]]; then
   echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
 else 
   echo "Settings initialized. Argon One Detected. Beginning monitor.."
+  if [ "$alwaysOn" == true ]; then
+    echo "Setting Power Mode: Always On";
+    i2cset -y 1 0x01a 0xfe
+  elif [ "$alwaysOn" == false ]; then
+    echo "Setting Power Mode: Power Button";
+    i2cset -y 1 0x01a 0xfd
+  fi
 fi;
 
 
