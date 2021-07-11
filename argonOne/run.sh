@@ -76,8 +76,9 @@ action() {
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${temp}${CorF} - Level ${level} - Fan ${percent}% (${name})";
   i2cset -y 1 0x01a "${percentHex}"
+  returnValue=${?}
   test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${temp}" "${CorF}" &
-  return ${?}
+  return ${returnValue}
 }
 
 
