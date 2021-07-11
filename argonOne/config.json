@@ -20,7 +20,7 @@
     "QuietProfile": true,
     "Create a Fan Speed entity in Home Assistant": false,
     "Log current temperature every 30 seconds": true,
-    "AlwaysOn": true
+    "AlwaysOn": false
   },
   "schema": {
     "CorF": "str",
