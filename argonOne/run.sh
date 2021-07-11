@@ -24,12 +24,12 @@ fcomp() {
         digitx=${x[1]:0:1}
         digity=${y[1]:0:1}
         (( x[0] = x[0] * 10 + ${digitx:-0} , y[0] = y[0] * 10 + ${digity:-0} ))
-        x[1]=${x[1]:1} y[1]=${y[1]:1} 
+        x[1]=${x[1]:1} y[1]=${y[1]:1}
     done
     [[ ${1:0:1} == '-' ]] && (( x[0] *= -1 ))
     [[ ${3:0:1} == '-' ]] && (( y[0] *= -1 ))
     (( "${x:-0}" "$op" "${y:-0}" ))
-} 
+}
 
 
 fanSpeedReport(){
@@ -58,7 +58,7 @@ fanSpeedReport(){
     nc -i 1 hassio 80 1>/dev/null <<<unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
-Content-Length: $( echo -ne "${reqBody}" | wc -c ) 
+Content-Length: $( echo -ne "${reqBody}" | wc -c )
 
 ${reqBody}
 EOF
@@ -81,9 +81,6 @@ action() {
   return ${returnValue}
 }
 
-
-
-
 ###
 #Inputs - inputs from Home Assistant Config
 ###
@@ -102,7 +99,7 @@ curPosition=-1;
 lastPosition=-1;
 
 #Trap exits and set fan to 100% like a safe mode.
-trap 'i2cset -y 1 0x01a 0x64;lastPosition=-1;curPosition=-1; echo Safe Mode Activated!; exit 0;' ERR EXIT INT TERM
+trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y 1 0x01a 0x63;lastPosition=-1;curPosition=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
 if [ ! -e /dev/i2c-1 ]; then
   echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
@@ -163,23 +160,21 @@ until false; do
           fanPercent=0;
         ;;
       2)
+        curPosition=2;
         if [ "$quiet" != true ]; then
-          curPosition=2;
           curPositionName="Low";
           fanPercent=33;
         else
-          curPosition=2;
           curPositionName="Quiet Low";
           fanPercent=1;
         fi
         ;;
       3)
+        curPosition=3;
         if [ "$quiet" != true ]; then
-          curPosition=3;
           curPositionName="Medium";
           fanPercent=66;
         else
-          curPosition=3;
           curPositionName="Quiet Medium";
           fanPercent=3;
         fi
@@ -196,9 +191,7 @@ until false; do
     lastPosition=$curPosition;
   fi
   sleep 30;
-  ((thirtySecondsCount++));
-  #thirtySecondsCount mod 20 will be 0 once every 20 times, or approx. 10 minutes.  
+  (( thirtySecondsCount++ ));
+  #thirtySecondsCount mod 20 will be 0 once every 20 times, or approx. 10 minutes.
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${percent}" "${level}" "${name}" "${cpuTemp}" "${CorF}"
-  set -eE
-
 done
