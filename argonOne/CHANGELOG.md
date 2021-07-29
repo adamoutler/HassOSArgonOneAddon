@@ -2,6 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **24.0**   | Fix fanspeed display in sensor                            |
 | **23.0**   | Fix problem with safe mode activation when network fails  |
 | **23**     | Temperature in Speed Entity. Entity reported every 10 min |
 | **22**     | Add option to not log fan speed.                          |
