@@ -67,8 +67,8 @@ EOF
 
 
 action() {
-  level=${1}
-  percent=${2}
+  percent=${1}
+  level=${2}
   name=${3}
   percentHex=${4}
   temp=${5}
