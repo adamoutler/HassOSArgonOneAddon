@@ -1,7 +1,7 @@
 {
   "name": "ArgonOne Active Cooling",
   "image": "adamoutler/{arch}-hassosargonone",
-  "version": "24.1",
+  "version": "24.2",
   "slug": "argon_one_temp",
   "description": "Actively keeping your Argon One cool.",
   "arch": ["armhf", "armv7", "aarch64"],
@@ -13,6 +13,7 @@
   "url": "https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/",
   "map": ["config", "ssl", "addons", "backup", "share", "media"],
   "options": {
+    "ManageStyle": "Step",
     "CorF": "F",
     "LowRange": 130,
     "MediumRange": 140,
@@ -22,6 +23,7 @@
     "Log current temperature every 30 seconds": true
   },
   "schema": {
+    "ManageStyle": "list(Step|Linear)",
     "CorF": "str",
     "LowRange": "int(0,255)",
     "MediumRange": "int(0,255)",
