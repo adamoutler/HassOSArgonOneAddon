@@ -1,6 +1,5 @@
 {
   "name": "ArgonOne Active Cooling",
-  "image": "adamoutler/{arch}-hassosargonone",
   "version": "24.2",
   "slug": "argon_one_temp",
   "description": "Actively keeping your Argon One cool.",
