@@ -62,9 +62,6 @@ fanSpeedReportLinear(){
   cpuTemp=${2}
   CorF=${3}
   icon=mdi:fan
-
-  echo "${SUPERVISOR_TOKEN}"
-
   reqBody='{"state": "'"${fanPercent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "Temperature '"${CorF}"'": "'"${cpuTemp}"'", "friendly_name": "Argon Fan Speed"}}'
   nc -i 1 hassio 80 1>/dev/null <<< unix2dos<<EOF
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
