@@ -100,9 +100,9 @@ actionLinear() {
 }
 
 
-tmini=$(jq -r '.Minimum Temperature' <options.json)
-tmaxi=$(jq -r '.Maximum Temperature'<options.json)
-CorF=$(jq -r '.Celsius or Fahrenheit'<options.json)
+tmini=$(jq -r '."Minimum Temperature"' <options.json)
+tmaxi=$(jq -r '."Maximum Temperature"'<options.json)
+CorF=$(jq -r '."Celsius or Fahrenheit"'<options.json)
 createEntity=$(jq -r '."Create a Fan Speed entity in Home Assistant"' <options.json)
 logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 
