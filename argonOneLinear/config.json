@@ -1,7 +1,7 @@
 {
-  "name": "ArgonOne Active Cooling",
+  "name": "ArgonOne Active Linear Cooling",
   "version": "24.3",
-  "slug": "argon_one_temp",
+  "slug": "argon_one_temp_linear",
   "description": "Actively keeping your Argon One cool.",
   "arch": ["armhf", "armv7", "aarch64"],
   "auth_api": true,
@@ -12,7 +12,7 @@
   "url": "https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/",
   "map": ["config", "ssl", "addons", "backup", "share", "media"],
   "options": {
-    "Celsius or Fahrenheit ": "F",
+    "Celsius or Fahrenheit": "F",
     "Minimum Temperature": 130,
     "Maximum Temperature": 150,
     "Create a Fan Speed entity in Home Assistant": false,
