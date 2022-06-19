@@ -1,22 +1,21 @@
 # Configuration
 
-![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/Configuration.png)
+![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/linearsettings.png)
 
 ## Celsius or Fahrenheit
 
 Choose Celsius or Fahrenheit.
 
-- **CorF** - Configures Celsius or Fahrenheit.
+- **Celsius or Fahrenheit** - Configures Celsius or Fahrenheit.
 
 ## Temperature Ranges
 
-![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/FanRangeExplaination.png)
+![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/argonlinear.png)
 
 Set your fan ranges appropriately.
 
-- **LowRange** Minimum Temperature to turn on 33%. Anything lower will turn off.
-- **MediumRange** to be the temperature divider between 33 and 66%.
-- **HighRange** to be the maximum temperature before 100% fan.
+- **Minimum Temperature** Minimum Temperature to turn on. Anything lower will turn off.
+- **HighRange** The maximum temperature before 100% fan.
 
 ## Enable I2C
 
