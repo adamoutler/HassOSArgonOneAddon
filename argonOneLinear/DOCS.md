@@ -15,7 +15,7 @@ Choose Celsius or Fahrenheit.
 Set your fan ranges appropriately.
 
 - **Minimum Temperature** Minimum Temperature to turn on. Anything
-lower will turn off.
+  lower will turn off.
 - **Maximum Temperature** The maximum temperature before 100% fan.
 
 ## Enable I2C
