@@ -2,6 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **25.0**   | Misc fixes for new HA Version                             |
 | **24.0**   | Fix fanspeed display in sensor                            |
 | **23.0**   | Fix problem with safe mode activation when network fails  |
 | **23**     | Temperature in Speed Entity. Entity reported every 10 min |
