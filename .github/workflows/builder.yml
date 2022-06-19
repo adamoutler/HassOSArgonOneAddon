@@ -1,8 +1,6 @@
 ---
 name: CI
 
-
-
 # yamllint disable-line rule:truthy
 on:
   push:
@@ -91,7 +89,6 @@ jobs:
         env:
           SHELLCHECK_OPTS: -s bash -e SC2206 -e SC1105 -e SC2046 -e SC2261
 
-  
   lint-prettier:
     name: Prettier
     runs-on: ubuntu-latest
@@ -122,14 +119,6 @@ jobs:
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v2.3.4
-      - name: 🏗 Set up build cache
-        id: cache
-        uses: actions/cache@v2.1.5
-        with:
-          path: /tmp/.docker-cache
-          key: docker-${{ github.ref }}-${{ matrix.architecture }}-${{ github.sha }}
-          restore-keys: |
-            docker-${{ github.ref }}-${{ matrix.architecture }}
       - name: 🏗 Set up QEMU
         uses: docker/setup-qemu-action@v1.0.2
       - name: 🏗 Set up Docker Buildx
@@ -157,25 +146,21 @@ jobs:
       - name: get version
         id: version
         uses: notiz-dev/github-action-json-property@release
-        with: 
-          path: 'argonOne/config.json'
-          prop_path: 'version'
-      - name: Login to DockerHub
-        uses: docker/login-action@v1 
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }} 
+          path: "argonOne/config.json"
+          prop_path: "version"
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: 🚀 Build
         uses: docker/build-push-action@v2.4.0
         with:
           push: true
-          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:${{steps.version.outputs.prop}} 
+          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:${{steps.version.outputs.prop}}
           context: ${{ needs.information.outputs.target }}
           file: ${{ needs.information.outputs.target }}/Dockerfile
-          cache-from: |
-            type=local,src=/tmp/.docker-cache
-            ghcr.io/adamoutler/${{ needs.information.outputs.slug }}/${{ matrix.architecture }}:edge
-          cache-to: type=local,mode=max,dest=/tmp/.docker-cache
           platforms: ${{ steps.flags.outputs.platform }}
           build-args: |
             BUILD_ARCH=${{ matrix.architecture }}
