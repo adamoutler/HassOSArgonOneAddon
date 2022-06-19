@@ -15,15 +15,16 @@ This Addon keeps your temperature within specified ranges.
 
 Mathematic formula applied:
 
-    y = a*x + b
-    y is fan speed
-    x is instant temperature
-    a is gradient
-    b is origin when y=0
+```y = a*x + b
+y is fan speed
+x is instant temperature
+a is gradient
+b is origin when y=0
 
-    value_a=$((100/(tmaxi-tmini)))
-    value_b=$((-value_a*tmini))
-    fanPercent=$((value_a*value+value_b))
+value_a=$((100/(tmaxi-tmini)))
+value_b=$((-value_a*tmini))
+fanPercent=$((value_a*value+value_b))
+```
 
 ## Support
 
