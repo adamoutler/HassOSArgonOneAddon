@@ -19,6 +19,8 @@ jobs:
   information:
     name: Gather add-on information
     runs-on: ubuntu-latest
+    with:
+      path: "argonOne/config.json"
     outputs:
       architectures: ${{ steps.information.outputs.architectures }}
       build: ${{ steps.information.outputs.build }}
