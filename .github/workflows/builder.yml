@@ -19,8 +19,6 @@ jobs:
   information:
     name: Gather add-on information
     runs-on: ubuntu-latest
-    with:
-      path: "argonOne/config.json"
     outputs:
       architectures: ${{ steps.information.outputs.architectures }}
       build: ${{ steps.information.outputs.build }}
@@ -34,7 +32,8 @@ jobs:
       - name: 🚀 Run add-on information action
         id: information
         uses: frenck/action-addon-information@v1.4.0
-
+        with:
+          path: "argonOne/config.json"
   lint-addon:
     name: Lint Add-on
     needs:
