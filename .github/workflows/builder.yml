@@ -33,7 +33,7 @@ jobs:
         id: information
         uses: frenck/action-addon-information@v1.4.0
         with:
-          path: "HassOSArgonOneAddon/argonOne/config.json"
+          path: "HassOSArgonOneAddon/HassOSArgonOneAddon/argonOne/config.json"
   lint-addon:
     name: Lint Add-on
     needs:
