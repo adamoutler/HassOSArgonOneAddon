@@ -26,38 +26,7 @@ fcomp() {
   (( "${x:-0}" "$op" "${y:-0}" ))
 }
 
-fanSpeedReport(){
-  fanPercent=${1}
-  fanLevel=${2}
-  fanMode=${3}
-  cpuTemp=${4}
-  CorF=${5}
-  case ${fanLevel} in
-    1)
-      icon=mdi:fan;
-      ;;
-    2)
-      icon=mdi:fan-speed-1;
-      ;;
-    3)
-      icon=mdi:fan-speed-2;
-      ;;
-    4)
-      icon=mdi:fan-speed-3;
-      ;;
-    *)
-      icon=mdi:fan;
-  esac
 
-  reqBody='{"state": "'"${fanPercent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "mode": "'"${fanMode}"'", "Temperature '"${CorF}"'": "'"${cpuTemp}"'", "fan level": "'"${fanLevel}"'", "friendly_name": "Argon Fan Speed"}}'
-  nc -i 1 hassio 80 1>/dev/null <<< unix2dos<<EOF
-POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
-Authorization: Bearer ${SUPERVISOR_TOKEN}
-Content-Length: $( echo -ne "${reqBody}" | wc -c )
-
-${reqBody}
-EOF
-}
 fanSpeedReportLinear(){
   fanPercent=${1}
   cpuTemp=${2}
@@ -68,6 +37,7 @@ fanSpeedReportLinear(){
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
 Content-Length: $( echo -ne "${reqBody}" | wc -c )
+
 ${reqBody}
 EOF
 }
@@ -144,7 +114,7 @@ fanPercent=0;
 ###
 #Main Loop - read and react to changes in read temperature
 ###
-test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
+
 
 value_a=$((100/(tmaxi-tmini)))
 value_b=$((-value_a*tmini))
