@@ -2,6 +2,8 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **27**     | Faster fanspeed updates                                   |
+| **26**     | Merge branch changes                                      |
 | **25.0**   | Misc fixes for new HA Version                             |
 | **24.0**   | Fix fanspeed display in sensor                            |
 | **23.0**   | Fix problem with safe mode activation when network fails  |
