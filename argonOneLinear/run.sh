@@ -139,8 +139,9 @@ until false; do
     test $? -ne 0 && fanPercent=previousFanPercent
     previousFanPercent=$fanPercent
   fi
+  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
   sleep 30
   thirtySecondsCount=$((thirtySecondsCount + 1))
-  test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
+  
 
 done
