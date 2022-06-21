@@ -54,6 +54,7 @@ fanSpeedReport(){
 POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
 Authorization: Bearer ${SUPERVISOR_TOKEN}
 Content-Length: $( echo -ne "${reqBody}" | wc -c )
+
 ${reqBody}
 EOF
 }
@@ -143,7 +144,7 @@ fanPercent=0;
 ###
 #Main Loop - read and react to changes in read temperature
 ###
-
+test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
 
 value_a=$((100/(tmaxi-tmini)))
 value_b=$((-value_a*tmini))
