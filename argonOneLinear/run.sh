@@ -104,10 +104,6 @@ fi;
 
 #Counts the number of repetitions so we can set a 10minute count.
 thirtySecondsCount=0;
-#the current position, 0=unitialized. 1=off, 2=low, 3=medium, 4=high.
-fanLevel=0;
-#The name of the current position.
-fanMode="off";
 #The human readable percentage of the fan speed
 fanPercent=0;
 
