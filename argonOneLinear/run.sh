@@ -80,7 +80,6 @@ logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 ###
 #initial setup - prepare things for operation
 ###
-fanLevel=-1;
 fanPercent=-1;
 previousFanPercent=-1;
 
