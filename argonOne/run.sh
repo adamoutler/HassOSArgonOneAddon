@@ -26,11 +26,10 @@ calibrateI2CPort() {
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
     echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && return "$port";
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port};
     
   done;
   echo "Port not found...";
-  return 255;
 } 
 
 
@@ -120,10 +119,11 @@ fanLevel=-1;
 previousFanLevel=-1;
 
 
+thePort=255;
 
 echo "Detecting Layout of i2c, we expect to see \"1a\" here."
 calibrateI2CPort;
-port=$?;
+port=${thePort};
 echo "I2C Port ${port}";
 
 #Trap exits and set fan to 100% like a safe mode.
