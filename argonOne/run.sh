@@ -13,6 +13,30 @@ mkfloat() {
   echo "$str";
 }
 
+##Perform basic checks and return the port number of the detected device.  If the
+## device is detected via rudamentary checks, then we will return that exit code.
+## otherwise we return -1 (255).
+calibrateI2CPort() {
+  if [ -z  "$(ls /dev/i2c-*)" ]; then
+    echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
+    exit 1;
+  fi
+  for device in $(ls /dev/i2c-*); do 
+    port=${device:9};
+    echo "checking i2c port ${port} at ${device}";
+    detection=$(i2cdetect -y ${port});
+    oldIFS=${IFS};
+    IFS='\x0n';
+    for line in ${detection}; do 
+      echo $line;
+      [[ "${line}" == *"-- -- -- 1a -- -- --"* ]] && return $port;
+    done;
+    IFS=${oldIFS};
+  done;
+  return -1;
+} 
+
+
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
     local oldIFS="$IFS" op=$2 x y digitx digity
@@ -75,7 +99,7 @@ action() {
   fanPercentHex=$(printf '%x' "${fanPercent}")
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Level ${fanLevel} - Fan ${fanPercent}% (${fanMode})";
-  i2cset -y 1 0x01a "${fanPercentHex}"
+  i2cset -y ${port} 0x01a "${fanPercentHex}"
   returnValue=${?}
   test "${createEntity}" == "true" && fanSpeedReport "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}" &
   return ${returnValue}
@@ -99,18 +123,15 @@ fanLevel=-1;
 previousFanLevel=-1;
 
 #Trap exits and set fan to 100% like a safe mode.
-trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y 1 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
+trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y '${port}' 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
-if [ ! -e /dev/i2c-1 ]; then
-  echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
-  exit 1;
-fi
+
 
 echo "Detecting Layout of i2c, we expect to see \"1a\" here."
-i2cDetect=$(i2cdetect -y -a 1);
-echo -e "${i2cDetect}"
+calibrateI2CPort;
+port=$?;
 
-if [[ "$i2cDetect" != *"1a"* ]]; then 
+if [ "${port}" == 255 ]; then 
   echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
 else 
   echo "Settings initialized. Argon One Detected. Beginning monitor.."
