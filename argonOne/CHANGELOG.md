@@ -2,7 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
-| **28*      | Support for Debian!  Highly requested feature.            |
+| \*_28_     | Support for Debian! Highly requested feature.             |
 | **27**     | Faster fanspeed updates                                   |
 | **26**     | Merge branch changes                                      |
 | **25.0**   | Misc fixes for new HA Version                             |
