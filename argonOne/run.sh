@@ -118,14 +118,15 @@ logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 fanLevel=-1;
 previousFanLevel=-1;
 
-#Trap exits and set fan to 100% like a safe mode.
-trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y '"${port}"' 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
-
 
 
 echo "Detecting Layout of i2c, we expect to see \"1a\" here."
 calibrateI2CPort;
 port=$?;
+
+#Trap exits and set fan to 100% like a safe mode.
+trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y '"${port}"' 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
+
 
 if [ "${port}" == 255 ]; then 
   echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
