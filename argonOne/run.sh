@@ -25,8 +25,8 @@ calibrateI2CPort() {
     port=${device:9};
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
-    echo ${detection}
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && return $port;
+    echo "${detection}"
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && return "$port";
     
   done;
   return 255;
@@ -95,7 +95,7 @@ action() {
   fanPercentHex=$(printf '%x' "${fanPercent}")
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Level ${fanLevel} - Fan ${fanPercent}% (${fanMode})";
-  i2cset -y ${port} 0x01a "${fanPercentHex}"
+  i2cset -y "${port}" 0x01a "${fanPercentHex}"
   returnValue=${?}
   test "${createEntity}" == "true" && fanSpeedReport "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}" &
   return ${returnValue}
@@ -119,7 +119,7 @@ fanLevel=-1;
 previousFanLevel=-1;
 
 #Trap exits and set fan to 100% like a safe mode.
-trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y '${port}' 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
+trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y '"${port}"' 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
 
 
