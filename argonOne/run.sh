@@ -29,6 +29,7 @@ calibrateI2CPort() {
     [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && return "$port";
     
   done;
+  echo "Port not found...";
   return 255;
 } 
 
@@ -123,9 +124,10 @@ previousFanLevel=-1;
 echo "Detecting Layout of i2c, we expect to see \"1a\" here."
 calibrateI2CPort;
 port=$?;
+echo "I2C Port ${port}";
 
 #Trap exits and set fan to 100% like a safe mode.
-trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y '"${port}"' 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
+trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y ${port} 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
 
 if [ "${port}" == 255 ]; then 
