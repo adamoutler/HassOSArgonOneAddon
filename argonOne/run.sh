@@ -25,13 +25,9 @@ calibrateI2CPort() {
     port=${device:9};
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
-    oldIFS=${IFS};
-    IFS='\x0D';
-    for line in ${detection}; do 
-      echo $line;
-      [[ "${line}" == *"-- -- -- 1a -- -- --"* ]] && return $port;
-    done;
-    IFS=${oldIFS};
+    echo ${detection}
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && return $port;
+    
   done;
   return 255;
 } 
