@@ -15,25 +15,25 @@ mkfloat() {
 
 ##Perform basic checks and return the port number of the detected device.  If the
 ## device is detected via rudamentary checks, then we will return that exit code.
-## otherwise we return -1 (255).
+## otherwise we return 255.
 calibrateI2CPort() {
   if [ -z  "$(ls /dev/i2c-*)" ]; then
     echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
     exit 1;
   fi
-  for device in $(ls /dev/i2c-*); do 
+  for device in /dev/i2c-*; do 
     port=${device:9};
     echo "checking i2c port ${port} at ${device}";
-    detection=$(i2cdetect -y ${port});
+    detection=$(i2cdetect -y "${port}");
     oldIFS=${IFS};
-    IFS='\x0n';
+    IFS='\x0D';
     for line in ${detection}; do 
       echo $line;
       [[ "${line}" == *"-- -- -- 1a -- -- --"* ]] && return $port;
     done;
     IFS=${oldIFS};
   done;
-  return -1;
+  return 255;
 } 
 
 
