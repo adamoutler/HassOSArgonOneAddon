@@ -84,10 +84,10 @@ actionLinear() {
 
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Fan ${fanPercent}% | hex:(${fanPercentHex})";
-  i2cset -y ${port} 0x01a "${fanPercentHex}"
-  returnValue=${?}
+  i2cset -y "${port}" "0x01a" "${fanPercentHex}"
+  returnValue="${?}"
   test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}" &
-  return ${returnValue}
+  return "${returnValue}"
 }
 
 
