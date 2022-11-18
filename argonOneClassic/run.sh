@@ -1,6 +1,5 @@
 #!/usr/bin/with-contenv bashio
 
-## make everything into a float
 mkfloat() {
   str=$1
   if [[ $str != *"."* ]]; then
@@ -8,25 +7,6 @@ mkfloat() {
   fi
   echo "$str";
 }
-
-##Perform basic checks and return the port number of the detected device.  If the
-## device is detected via rudamentary checks, then we will return that exit code.
-## otherwise we return 255.
-calibrateI2CPort() {
-  if [ -z  "$(ls /dev/i2c-*)" ]; then
-    echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
-    exit 1;
-  fi
-  for device in /dev/i2c-*; do 
-    port=${device:9};
-    echo "checking i2c port ${port} at ${device}";
-    detection=$(i2cdetect -y "${port}");
-    echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port};
-    
-  done;
-  echo "Port not found...";
-} 
 
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
@@ -84,7 +64,7 @@ actionLinear() {
 
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Fan ${fanPercent}% | hex:(${fanPercentHex})";
-  i2cset -y ${port} 0x01a "${fanPercentHex}"
+  i2cset -y 1 0x01a "${fanPercentHex}"
   returnValue=${?}
   test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}" &
   return ${returnValue}
@@ -103,20 +83,21 @@ logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 fanPercent=-1;
 previousFanPercent=-1;
 
-echo "Detecting Layout of i2c, we expect to see \"1a\" here."
-calibrateI2CPort;
-port=${thePort};
-echo "I2C Port ${port}";
-
 #Trap exits and set fan to 100% like a safe mode.
-trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y ${port} 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
+trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y 1 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
+if [ ! -e /dev/i2c-1 ]; then
+  echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
+  exit 1;
+fi
 
+echo "Detecting Layout of i2c, we expect to see \"1a\" here."
+i2cDetect=$(i2cdetect -y -a 1);
+echo -e "${i2cDetect}"
 
-
-if [ "${port}" == 255 ]; then 
+if [[ "$i2cDetect" != *"1a"* ]]; then
   echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
-else 
+else
   echo "Settings initialized. Argon One Detected. Beginning monitor.."
 fi;
 

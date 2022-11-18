@@ -97,6 +97,7 @@ action() {
   echo ": ${cpuTemp}${CorF} - Level ${fanLevel} - Fan ${fanPercent}% (${fanMode})";
   i2cset -y "${port}" 0x01a "${fanPercentHex}"
   returnValue=${?}
+  #Fan speed report on a new thread because it can be slow.
   test "${createEntity}" == "true" && fanSpeedReport "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}" &
   return ${returnValue}
 }
@@ -150,7 +151,7 @@ fanPercent=0;
 ###
 
 until false; do
-  read -r cpuRawTemp < /sys/class/thermal/thermal_zone0/temp #read instead of cat fpr process reduction
+  read -r cpuRawTemp < /sys/class/thermal/thermal_zone0/temp #read instead of cat for process reduction
   cpuTemp=$(( cpuRawTemp/1000 )) #built-in bash math
   unit="C"
 
