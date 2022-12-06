@@ -22,8 +22,8 @@ calibrateI2CPort() {
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
     echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && device=1a;
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && device=1b;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && device=1a && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && device=1b && break;
   done;
 } 
 
@@ -107,7 +107,7 @@ echo "Detecting Layout of i2c, we expect to see \"1a\" here."
 calibrateI2CPort;
 port=${thePort};
 echo "I2C Port ${port}";
-
+echo "I2C Device ${device}";
 #Trap exits and set fan to 100% like a safe mode.
 trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y ${port} 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
