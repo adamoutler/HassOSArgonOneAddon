@@ -2,7 +2,8 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
-| \*_28_     | Support for Debian! Highly requested feature.             |
+| **29**     | Detection for Argon One Neo                               |
+| **28**     | Support for Debian! Highly requested feature.             |
 | **27**     | Faster fanspeed updates                                   |
 | **26**     | Merge branch changes                                      |
 | **25.0**   | Misc fixes for new HA Version                             |
