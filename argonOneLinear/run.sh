@@ -22,10 +22,9 @@ calibrateI2CPort() {
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
     echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port};
-    
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && device=1a;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && device=1b;
   done;
-  echo "Port not found...";
 } 
 
 ## Float comparison so that we don't need to call non-bash processes
@@ -63,9 +62,10 @@ EOF
 }
 
 actionLinear() {
-  fanPercent=${1}
-  cpuTemp=${2}
-  CorF=${3}
+  fanPercent=${1};
+  cpuTemp=${2};
+  CorF=${3};
+  device=${4};
 
   if [[ $fanPercent -lt 0 ]]; then
     fanPercent=0
@@ -84,7 +84,7 @@ actionLinear() {
 
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Fan ${fanPercent}% | hex:(${fanPercentHex})";
-  i2cset -y "${port}" "0x01a" "${fanPercentHex}"
+  i2cset -y "${port}" "0x0$device" "${fanPercentHex}"
   returnValue="${?}"
   test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}" &
   return "${returnValue}"
@@ -149,7 +149,7 @@ until false; do
   fanPercent=$((value_a*value+value_b))
   set +e
   if [ $previousFanPercent != $fanPercent ]; then
-    actionLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
+    actionLinear "${fanPercent}" "${cpuTemp}" "${CorF}" "${device}"
     test $? -ne 0 && fanPercent=previousFanPercent
     previousFanPercent=$fanPercent
   fi
