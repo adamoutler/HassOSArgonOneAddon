@@ -22,8 +22,8 @@ calibrateI2CPort() {
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
     echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && device=1a && break;
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && device=1b && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && break;
   done;
 } 
 
@@ -65,7 +65,6 @@ actionLinear() {
   fanPercent=${1};
   cpuTemp=${2};
   CorF=${3};
-  device=${4};
 
   if [[ $fanPercent -lt 0 ]]; then
     fanPercent=0
@@ -84,7 +83,7 @@ actionLinear() {
 
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Fan ${fanPercent}% | hex:(${fanPercentHex})";
-  i2cset -y "${port}" "0x0$device" "${fanPercentHex}"
+  i2cset -y "${port}" "0x01a" "${fanPercentHex}"
   returnValue="${?}"
   test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}" &
   return "${returnValue}"
@@ -107,7 +106,6 @@ echo "Detecting Layout of i2c, we expect to see \"1a\" here."
 calibrateI2CPort;
 port=${thePort};
 echo "I2C Port ${port}";
-echo "I2C Device ${device}";
 #Trap exits and set fan to 100% like a safe mode.
 trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y ${port} 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
 
@@ -149,7 +147,7 @@ until false; do
   fanPercent=$((value_a*value+value_b))
   set +e
   if [ $previousFanPercent != $fanPercent ]; then
-    actionLinear "${fanPercent}" "${cpuTemp}" "${CorF}" "${device}"
+    actionLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
     test $? -ne 0 && fanPercent=previousFanPercent
     previousFanPercent=$fanPercent
   fi

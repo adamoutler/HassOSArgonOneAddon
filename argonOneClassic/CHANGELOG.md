@@ -2,6 +2,7 @@
 
 | Version | Change                                                   |
 | ------- | -------------------------------------------------------- |
+| **29b** | Incrementing version only.                               |
 | **28**  | Moved into a new addon for compatibility in the future.  |
 | **27**  | Faster fanspeed update                                   |
 | **26**  | Fix fan speed indicator                                  |

@@ -26,8 +26,8 @@ calibrateI2CPort() {
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
     echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && device=1a && break;
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && device=1b && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && break;
   done;
   echo "Port not found...";
 } 
@@ -92,11 +92,10 @@ action() {
   fanMode=${3}
   cpuTemp=${4}
   CorF=${5}
-  device=${6}
   fanPercentHex=$(printf '%x' "${fanPercent}")
   printf '%(%Y-%m-%d_%H:%M:%S)T'
   echo ": ${cpuTemp}${CorF} - Level ${fanLevel} - Fan ${fanPercent}% (${fanMode})";
-  i2cset -y "${port}" "0x0${device}" "${fanPercentHex}"
+  i2cset -y "${port}" "0x01a" "${fanPercentHex}"
   returnValue=${?}
   #Fan speed report on a new thread because it can be slow.
   test "${createEntity}" == "true" && fanSpeedReport "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}" &
@@ -127,7 +126,6 @@ echo "Detecting Layout of i2c, we expect to see \"1a\" here."
 calibrateI2CPort;
 port=${thePort};
 echo "I2C Port ${port}";
-echo "I2C Device ${device}";
 
 #Trap exits and set fan to 100% like a safe mode.
 trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y ${port} 0x01a 0x63;previousFanLevel=-1;fanLevel=-1; echo Safe Mode Activated!;' ERR EXIT INT TERM
@@ -208,7 +206,7 @@ until false; do
         fanPercent=100;
         ;;
     esac
-    action "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}" "${device}";
+    action "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}";
     test $? -ne 0 && fanLevel=previousFanLevel
     previousFanLevel=$fanLevel
   fi

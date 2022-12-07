@@ -1,6 +1,6 @@
 {
   "name": "ArgonOne Active Linear Cooling - Classic",
-  "version": "27",
+  "version": "29b",
   "slug": "argon_one_temp_linear_Linear",
   "description": "Actively keeping your Argon One cool.",
   "arch": ["armhf", "armv7", "aarch64"],
