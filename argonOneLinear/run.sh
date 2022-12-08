@@ -1,6 +1,9 @@
 #!/usr/bin/with-contenv bashio
 
-## make everything into a float
+###
+#Methods - methods called by script
+###
+##make everything into a float
 mkfloat() {
   str=$1
   if [[ $str != *"."* ]]; then
@@ -22,29 +25,30 @@ calibrateI2CPort() {
     echo "checking i2c port ${port} at ${device}";
     detection=$(i2cdetect -y "${port}");
     echo "${detection}"
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && break;
-    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1b -- -- -- -- --"* ]] && thePort=${port} && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- 1a -- -- -- -- --"* ]] && thePort=${port} && echo "found at $device" && break;
+    [[ "${detection}" == *"10: -- -- -- -- -- -- -- -- -- -- -- 1b -- -- -- --"* ]] && thePort=${port} && echo "found at $device" && break;
+    echo "not found on ${device}"
   done;
 } 
 
+
 ## Float comparison so that we don't need to call non-bash processes
 fcomp() {
-  local oldIFS="$IFS" op=$2 x y digitx digity
-  IFS='.'
-  x=( ${1##+([0]|[-]|[+])} )
-  y=( ${3##+([0]|[-]|[+])} )
-  IFS="$oldIFS"
-  while [[ "${x[1]}${y[1]}" =~ [^0] ]]; do
-      digitx=${x[1]:0:1}
-      digity=${y[1]:0:1}
-      (( x[0] = x[0] * 10 + ${digitx:-0} , y[0] = y[0] * 10 + ${digity:-0} ))
-      x[1]=${x[1]:1} y[1]=${y[1]:1}
-  done
-  [[ ${1:0:1} == '-' ]] && (( x[0] *= -1 ))
-  [[ ${3:0:1} == '-' ]] && (( y[0] *= -1 ))
-  (( "${x:-0}" "$op" "${y:-0}" ))
+    local oldIFS="$IFS" op=$2 x y digitx digity
+    IFS='.'
+    x=( ${1##+([0]|[-]|[+])} )
+    y=( ${3##+([0]|[-]|[+])} )
+    IFS="$oldIFS"
+    while [[ "${x[1]}${y[1]}" =~ [^0] ]]; do
+        digitx=${x[1]:0:1}
+        digity=${y[1]:0:1}
+        (( x[0] = x[0] * 10 + ${digitx:-0} , y[0] = y[0] * 10 + ${digity:-0} ))
+        x[1]=${x[1]:1} y[1]=${y[1]:1}
+    done
+    [[ ${1:0:1} == '-' ]] && (( x[0] *= -1 ))
+    [[ ${3:0:1} == '-' ]] && (( y[0] *= -1 ))
+    (( "${x:-0}" "$op" "${y:-0}" ))
 }
-
 
 fanSpeedReportLinear(){
   fanPercent=${1}
