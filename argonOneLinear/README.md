@@ -11,7 +11,6 @@ This Addon keeps your temperature within specified ranges.
 
 ![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/argonlinear.png)
 
-
 - The addon manages fan speed from 0 to 100%
 - Configure "Minimum temperature" to set the 1% speed.
 - Configure "Maximum temperature" to set the 100% speed.
