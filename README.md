@@ -13,6 +13,7 @@ Within HA
 1. Add this Repository URL.
 
 Click ArgonOne Temp Control and install.
+
 ![image](gitResources/addonSelect.png)
 
 # Configuration
