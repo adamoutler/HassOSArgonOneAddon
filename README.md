@@ -1,11 +1,12 @@
 ![image](gitResources/activecooling.jpg)
 
-This Addon enables and activates automated active cooling.
+This Addon enables and activates automated active cooling. It communicates over i2c.
 
 # Installation
 
 Within HA
 
+1. Pre-req: you must enable i2C first. See instructions [below](#enable-i2c).
 1. Click Supervisor.
 1. Click Add-on Store.
 1. Click the … button (in top left).
