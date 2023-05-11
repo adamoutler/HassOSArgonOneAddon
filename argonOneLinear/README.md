@@ -5,13 +5,17 @@
 This is an addon for Argon One in Home Assistant.
 It's essentially a script that runs in a docker container.
 It enables and automates the Argon One Active Cooling System with your specifications.
+It smoothly increases the fan speed based on the temperature.
 
 This Addon keeps your temperature within specified ranges.
+
 ![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/argonlinear.png)
 
-- 0 to 100 % speed fan is manage.
-- in "low range" put mini value temperature for 1% fan speed.
-- in "high range" put, maxi value temperature for 100% fan speed.
+
+- The addon manages fan speed from 0 to 100%
+- Configure "Minimum temperature" to set the 1% speed.
+- Configure "Maximum temperature" to set the 100% speed.
+- The fan will be off until the minimum temperature is reached.
 
 Mathematic formula applied:
 
@@ -27,6 +31,11 @@ fanPercent=$((value_a*value+value_b))
 ```
 
 ## Support
+
+First, look in the Logs tab of the Addon's page in HA to see if i2c was set up properly, or for any other errors.
+
+Also, enable the "Log current temperature every 30 seconds" setting and look in the logs to see what the speed is. The fan is noisy and you
+might not be able to hear different speeds, but logging will verify any changes.
 
 Need support? Click [here](https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/8).
 Try to be detailed about your feedback.
