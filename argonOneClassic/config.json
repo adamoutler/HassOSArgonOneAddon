@@ -23,6 +23,7 @@
     "Minimum Temperature": "int(0,255)",
     "Maximum Temperature": "int(0,255)",
     "Create a Fan Speed entity in Home Assistant": "bool",
+    "Create an Argon Temperature entity in Home Assistant": "bool",
     "Log current temperature every 30 seconds": "bool"
   }
 }
