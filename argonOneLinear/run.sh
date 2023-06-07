@@ -65,6 +65,19 @@ ${reqBody}
 EOF
 }
 
+temperatureReport(){
+  cpuTemp=${1}
+  CorF=${2}
+  reqBody='{"state": "'"${cpuTemp}"'", "attributes": { "unit_of_measurement": "${CorF}", "friendly_name": "Argon Temperature"}}'
+  nc -i 1 hassio 80 1>/dev/null <<< unix2dos<<EOF
+POST /homeassistant/api/states/sensor.argon_one_addon_temperature HTTP/1.1
+Authorization: Bearer ${SUPERVISOR_TOKEN}
+Content-Length: $( echo -ne "${reqBody}" | wc -c )
+
+${reqBody}
+EOF
+}
+
 actionLinear() {
   fanPercent=${1};
   cpuTemp=${2};
@@ -90,6 +103,7 @@ actionLinear() {
   i2cset -y "${port}" "0x01a" "${fanPercentHex}"
   returnValue="${?}"
   test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}" &
+  test "${createTemperatureEntity}" == "true" && temperatureReport "${cpuTemp}" "${CorF}" &
   return "${returnValue}"
 }
 
@@ -98,6 +112,7 @@ tmini=$(jq -r '."Minimum Temperature"' <options.json)
 tmaxi=$(jq -r '."Maximum Temperature"'<options.json)
 CorF=$(jq -r '."Celsius or Fahrenheit"'<options.json)
 createEntity=$(jq -r '."Create a Fan Speed entity in Home Assistant"' <options.json)
+createTemperatureEntity=$(jq -r '."Create an Argon Temperature entity in Home Assistant"' <options.json)
 logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 
 ###
@@ -156,6 +171,7 @@ until false; do
     previousFanPercent=$fanPercent
   fi
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReportLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
+  test $((thirtySecondsCount%20)) == 0 && test "${createTemperatureEntity}" == "true" && temperatureReport "${cpuTemp}" "${CorF}"
   sleep 30
   thirtySecondsCount=$((thirtySecondsCount + 1))
   
