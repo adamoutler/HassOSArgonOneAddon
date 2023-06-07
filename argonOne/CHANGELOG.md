@@ -2,6 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **30**     | Option for reporting temperature as a separate entity     |
 | **29**     | Detection for Argon One Neo                               |
 | **28**     | Support for Debian! Highly requested feature.             |
 | **27**     | Faster fanspeed updates                                   |

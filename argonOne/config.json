@@ -47,6 +47,7 @@
     "HighRange": 150,
     "QuietProfile": true,
     "Create a Fan Speed entity in Home Assistant": false,
+    "Create an Argon Temperature entity in Home Assistant": false,
     "Log current temperature every 30 seconds": true
   },
   "schema": {
@@ -56,6 +57,7 @@
     "HighRange": "int(0,255)",
     "QuietProfile": "bool",
     "Create a Fan Speed entity in Home Assistant": "bool",
+    "Create an Argon Temperature entity in Home Assistant": "bool",
     "Log current temperature every 30 seconds": "bool"
   }
 }

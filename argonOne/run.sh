@@ -84,6 +84,18 @@ ${reqBody}
 EOF
 }
 
+temperatureReport(){
+  cpuTemp=${1}
+  CorF=${2}
+  reqBody='{"state": "'"${cpuTemp}"'", "attributes": { "unit_of_measurement": "${CorF}", "friendly_name": "Argon Temperature"}}'
+  nc -i 1 hassio 80 1>/dev/null <<< unix2dos<<EOF
+POST /homeassistant/api/states/sensor.argon_one_addon_temperature HTTP/1.1
+Authorization: Bearer ${SUPERVISOR_TOKEN}
+Content-Length: $( echo -ne "${reqBody}" | wc -c )
+
+${reqBody}
+EOF
+}
 
 
 action() {
@@ -99,6 +111,7 @@ action() {
   returnValue=${?}
   #Fan speed report on a new thread because it can be slow.
   test "${createEntity}" == "true" && fanSpeedReport "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}" &
+  test "${createTemperatureEntity}" == "true" && temperatureReport "${cpuTemp}" "${CorF}" &
   return ${returnValue}
 }
 
@@ -111,6 +124,7 @@ t2=$(mkfloat "$(jq -r '.MediumRange'<options.json)")
 t3=$(mkfloat "$(jq -r '.HighRange'<options.json)")
 quiet=$(jq -r '.QuietProfile'<options.json)
 createEntity=$(jq -r '."Create a Fan Speed entity in Home Assistant"' <options.json)
+createTemperatureEntity=$(jq -r '."Create an Argon Temperature entity in Home Assistant"' <options.json)
 logTemp=$(jq -r '."Log current temperature every 30 seconds"' <options.json)
 
 ###
@@ -212,6 +226,7 @@ until false; do
   fi
   
   test $((thirtySecondsCount%20)) == 0 && test "${createEntity}" == "true" && fanSpeedReport "${fanPercent}" "${fanLevel}" "${fanMode}" "${cpuTemp}" "${CorF}"
+  test $((thirtySecondsCount%20)) == 0 && test "${createTemperatureEntity}" == "true" && temperatureReport "${cpuTemp}" "${CorF}"
   sleep 30
   thirtySecondsCount=$((thirtySecondsCount + 1))
   #thirtySecondsCount mod 20 will be 0 once every 20 times, or approx. 10 minutes.
