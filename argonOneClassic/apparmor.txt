@@ -5,6 +5,7 @@ profile deskpipro flags=(attach_disconnected,mediate_deleted) {
   
   capability,
   file,
+  network,
 
   capability setgid,
   capability setuid,
