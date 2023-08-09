@@ -1,6 +1,6 @@
 name: ArgonOne Active Linear Cooling - Classic
 version: 29b
-slug: argon_one_temp_linear_Linear
+slug: argon_one_temp_linear_linear
 description: Actively keeping your Argon One cool.
 arch:
   - armhf
