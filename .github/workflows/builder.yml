@@ -159,6 +159,7 @@ jobs:
         - name: get version
           id: version
           run: echo "::set-output name=prop::${{ from_yaml(steps.version.outputs.prop) }}"
+          uses: notiz-dev/github-action-json-property@release
           with:
             path: "argonOne/config.yaml"
             prop_path: "version"
