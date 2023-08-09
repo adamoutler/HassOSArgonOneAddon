@@ -119,8 +119,8 @@ jobs:
         architecture: ${{ fromJson(needs.information.outputs.architectures) }}
     steps:
       - name: ⤵️ Check out code from GitHub
-        uses: ${{ fromJson(needs.information.outputs.architectures) }}
-        - name: 🏗 Set up build cache
+        uses: actions/checkout@v3
+      - name: 🏗 Set up build cache
         id: cache
         uses: actions/cache@v3.3.1
         with:
