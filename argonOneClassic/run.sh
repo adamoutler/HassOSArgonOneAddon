@@ -129,8 +129,8 @@ until false; do
 
   fanPercent=$((value_a*value+value_b))
   set +e
-  if [ $previousFanPercent != $fanPercent ]; then
-    actionLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
+  if [ "${previousFanPercent}" != "${fanPercent}" ]; then
+  actionLinear "${fanPercent}" "${cpuTemp}" "${CorF}"
     test $? -ne 0 && fanPercent=previousFanPercent
     previousFanPercent=$fanPercent
   fi

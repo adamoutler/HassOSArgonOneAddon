@@ -176,7 +176,7 @@ until false; do
 
   set +e
 
-  if [ $previousFanLevel != $fanLevel ]; then
+  if [ "${previousFanLevel}" != "${fanLevel}" ]; then
     #based on current position, and quiet mode, we can set the name and percentage of fanspeed.
     case $fanLevel in
       1)
