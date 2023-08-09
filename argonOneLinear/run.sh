@@ -65,7 +65,7 @@ fanSpeedReportLinear(){
   echo -ne "${reqBody}" >&3
   timeout=5
   debug=false
-  while read -t "$timeout" -r line; do
+  while read -t "${timeout}" -r line; do
     if ${debug}; then
         echo "${line}"
     else 
