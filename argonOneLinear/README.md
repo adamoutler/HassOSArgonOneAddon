@@ -34,9 +34,9 @@ fanPercent=$((value_a*value+value_b))
 First, look in the Logs tab of the Addon's page in HA to see if i2c was set up properly,
  or for any other errors.
 
-Also, enable the "Log current temperature every 30 seconds" setting and look in the logs
- to see what the speed is. The fan is noisy and you might not be able to hear different
- speeds, but logging will verify any changes.
+Also, enable the "Log current temperature every 30 seconds" setting and look in the
+ logs to see what the speed is. The fan is noisy and you might not be able to hear
+ different speeds, but logging will verify any changes.
 
 Need support? Click [here](https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/8).
 Try to be detailed about your feedback.
