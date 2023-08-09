@@ -156,11 +156,13 @@ jobs:
             echo "::error ::Could not determine platform for architecture ${{ matrix.architecture }}"
             exit 1
           fi
-      - name: read-yaml-file
-        uses: pietrobolcato/action-read-yaml@1.0.0
-        id: read_action_js
-        with:
-          config: ${{ github.workspace }}/argonOne/config.yaml
+      - name: ℹ️ Get Version
+        id: version
+        run: |
+          echo "version=$(date +"%Y-%m-%dT%H:%M:%SZ")" >> "$GITHUB_OUTPUT"
+          from=$(yq --no-colors eval ".build_from.${{ matrix.architecture }}" "${{ needs.information.outputs.build }}")
+          echo "version=$(grep version: argonOne/config.yaml|sed 's/version: //')" >> "$GITHUB_OUTPUT"
+        config: ${{ github.workspace }}/argonOne/config.yaml
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -171,7 +173,7 @@ jobs:
         with:
           push: true
           no-cache: true
-          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:${{ steps.read_action_js.outputs['version'] }}
+          tags: adamoutler/${{ matrix.architecture }}-hassosargonone:${{ steps.version.outputs.version }}
           context: ${{ needs.information.outputs.target }}
           file: ${{ needs.information.outputs.target }}/Dockerfile
           platforms: ${{ steps.flags.outputs.platform }}
