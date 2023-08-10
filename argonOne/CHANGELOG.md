@@ -2,6 +2,7 @@
 
 | Version    | Change                                                    |
 | ---------- | --------------------------------------------------------- |
+| **30**  | Fix for missing fanspeed indicator in HA                 |
 | **29**     | Detection for Argon One Neo                               |
 | **28**     | Support for Debian! Highly requested feature.             |
 | **27**     | Faster fanspeed updates                                   |

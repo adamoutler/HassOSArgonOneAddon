@@ -33,13 +33,20 @@ fanSpeedReportLinear(){
   CorF=${3}
   icon=mdi:fan
   reqBody='{"state": "'"${fanPercent}"'", "attributes": { "unit_of_measurement": "%", "icon": "'"${icon}"'", "Temperature '"${CorF}"'": "'"${cpuTemp}"'", "friendly_name": "Argon Fan Speed"}}'
-  nc -i 1 hassio 80 1>/dev/null <<< unix2dos<<EOF
-POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1
-Authorization: Bearer ${SUPERVISOR_TOKEN}
-Content-Length: $( echo -ne "${reqBody}" | wc -c )
 
-${reqBody}
-EOF
+  exec 3<>/dev/tcp/hassio/80
+  echo -ne "POST /homeassistant/api/states/sensor.argon_one_addon_fan_speed HTTP/1.1\r\n" >&3
+  echo -ne "Connection: close\r\n" >&3
+  echo -ne "Authorization: Bearer ${SUPERVISOR_TOKEN}\r\n" >&3
+  echo -ne "Content-Length: $(echo -ne "${reqBody}" | wc -c)\r\n" >&3
+  echo -ne "\r\n" >&3
+  echo -ne "${reqBody}" >&3
+  timeout=5
+  while read -t "${timeout}" -r line; do
+        echo "${line}">/dev/null
+  done <&3
+  exec 3>&-
+
 }
 
 actionLinear() {
