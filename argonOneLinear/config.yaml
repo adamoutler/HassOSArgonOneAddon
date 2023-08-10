@@ -1,5 +1,5 @@
 name: ArgonOne Active Linear Cooling
-version: 30
+version: 30a
 slug: argon_one_temp_linear
 description: Actively keeping your Argon One cool.
 arch:
