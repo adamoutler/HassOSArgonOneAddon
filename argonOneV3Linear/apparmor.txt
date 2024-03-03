@@ -1,0 +1,61 @@
+#include <tunables/global>
+
+profile deskpipro flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  
+  capability,
+  file,
+
+  capability setgid,
+  capability setuid,
+
+  # S6-Overlay
+  /bin/** ix,
+  /usr/bin/** ix,
+  /usr/lib/bashio/** ix,
+  /etc/s6/** rix,
+  /run/s6/** rix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /init rix,
+  /var/run/** mrwkl,
+  /var/run/ mrwkl,
+  /dev/i2c-0 mrwkl,
+  /dev/i2c-1 mrwkl,
+  /dev/i2c-2 mrwkl,
+  /dev/i2c-3 mrwkl,
+  /dev/i2c-4 mrwkl,
+  /dev/i2c-5 mrwkl,
+  /dev/i2c-6 mrwkl,
+  /dev/i2c-7 mrwkl,
+  /dev/i2c-9 mrwkl,
+  /dev/i2c-10 mrwkl,
+  /dev/i2c-11 mrwkl,
+  /dev/i2c-12 mrwkl,
+  /dev/i2c-13 mrwkl,
+  /dev/i2c-14 mrwkl,
+  /dev/i2c-15 mrwkl,
+  /dev/i2c-16 mrwkl,
+  /dev/i2c-17 mrwkl,
+  /dev/i2c-18 mrwkl,
+  /dev/i2c-19 mrwkl,
+  /dev/i2c-20 mrwkl,
+  /dev/i2c-21 mrwkl,
+  /dev/i2c-22 mrwkl,
+  /dev/i2c-23 mrwkl,
+  /dev/i2c-24 mrwkl,
+  /dev/i2c-25 mrwkl,
+  /dev/i2c-26 mrwkl,
+
+  # Data access
+  /data/** rw,
+
+
+  # suppress ptrace denials when using 'docker ps' or using 'ps' inside a container
+  ptrace (trace,read) peer=docker-default,
+ 
+  # docker daemon confinement requires explict allow rule for signal
+  signal (receive) set=(kill,term) peer=/usr/bin/docker,
+
+}
