@@ -1,7 +1,7 @@
-name: ArgonOne Active Linear Cooling
+name: ArgonOne V3 Active Linear Cooling
 version: 30a
-slug: argon_one_temp_linear
-description: Actively keeping your Argon One cool.
+slug: argon_one_v3_temp_linear
+description: Actively keeping your ArgonOne V3 cool.
 arch:
   - armhf
   - armv7

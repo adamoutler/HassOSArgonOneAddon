@@ -122,9 +122,9 @@ trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y ${port} 0x01a 0x63;previo
 
 
 if [ "${port}" == 255 ]; then 
-  echo "Argon One was not detected on i2c. Argon One will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One.";
+  echo "Argon One V3 was not detected on i2c. Argon One V3 will show a 1a on the i2c bus above. This add-on will not control temperature without a connection to Argon One V3.";
 else 
-  echo "Settings initialized. Argon One Detected. Beginning monitor.."
+  echo "Settings initialized. Argon One V3 Detected. Beginning monitor.."
 fi;
 
 #Counts the number of repetitions so we can set a 10minute count.

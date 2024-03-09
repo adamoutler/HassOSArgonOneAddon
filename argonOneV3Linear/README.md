@@ -2,9 +2,9 @@
 
 ![image](https://raw.githubusercontent.com/adamoutler/HassOSArgonOneAddon/main/gitResources/activecooling.jpg)
 
-This is an addon for Argon One in Home Assistant.
+This is an addon for Argon One V3 in Home Assistant.
 It's essentially a script that runs in a docker container.
-It enables and automates the Argon One Active Cooling System with your specifications.
+It enables and automates the Argon One V3 Active Cooling System with your specifications.
 It smoothly increases the fan speed based on the temperature.
 
 This Addon keeps your temperature within specified ranges.
