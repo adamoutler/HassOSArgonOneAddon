@@ -1,0 +1,60 @@
+name: ArgonOne V3 Active Linear Cooling
+version: 30a
+slug: argon_one_v3_temp_linear
+description: Actively keeping your ArgonOne V3 cool.
+arch:
+  - armhf
+  - armv7
+  - aarch64
+auth_api: true
+homeassistant_api: true
+hassio_role: homeassistant
+hassio_api: true
+devices:
+  - /dev/i2c-0
+  - /dev/i2c-1
+  - /dev/i2c-2
+  - /dev/i2c-3
+  - /dev/i2c-4
+  - /dev/i2c-5
+  - /dev/i2c-6
+  - /dev/i2c-7
+  - /dev/i2c-8
+  - /dev/i2c-9
+  - /dev/i2c-10
+  - /dev/i2c-11
+  - /dev/i2c-12
+  - /dev/i2c-13
+  - /dev/i2c-14
+  - /dev/i2c-15
+  - /dev/i2c-16
+  - /dev/i2c-17
+  - /dev/i2c-18
+  - /dev/i2c-19
+  - /dev/i2c-20
+  - /dev/i2c-21
+  - /dev/i2c-22
+  - /dev/i2c-23
+  - /dev/i2c-24
+  - /dev/i2c-25
+  - /dev/i2c-26
+url: https://community.home-assistant.io/t/argon-one-active-cooling-addon/262598/
+map:
+  - config
+  - ssl
+  - addons
+  - backup
+  - share
+  - media
+options:
+  Celsius or Fahrenheit: F
+  Minimum Temperature: 130
+  Maximum Temperature: 150
+  Create a Fan Speed entity in Home Assistant: false
+  Log current temperature every 30 seconds: true
+schema:
+  Celsius or Fahrenheit: list(C|F)
+  Minimum Temperature: int(0,255)
+  Maximum Temperature: int(0,255)
+  Create a Fan Speed entity in Home Assistant: bool
+  Log current temperature every 30 seconds: bool
