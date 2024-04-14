@@ -95,6 +95,7 @@ trap 'echo "Failed ${LINENO}: $BASH_COMMAND";i2cset -y 1 0x01a 0x63;previousFanL
 
 if [ ! -e /dev/i2c-1 ]; then
   echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
+  sleep 999999;
   exit 1;
 fi
 
