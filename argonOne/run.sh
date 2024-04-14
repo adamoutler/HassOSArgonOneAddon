@@ -19,6 +19,7 @@ mkfloat() {
 calibrateI2CPort() {
   if [ -z  "$(ls /dev/i2c-*)" ]; then
     echo "Cannot find I2C port.  You must enable I2C for this add-on to operate properly";
+    sleep 999999;
     exit 1;
   fi
   for device in /dev/i2c-*; do 
