@@ -28,7 +28,7 @@ In order to enable i2C, you must follow one of the methods below.
 
 ### The official way
 
-[Official Guide](https://www.home-assistant.io/hassio/enable_i2c/)
+[Official Guide](https://www.home-assistant.io/installation/raspberrypi/#enable-i2c)
 
 ## Support
 
